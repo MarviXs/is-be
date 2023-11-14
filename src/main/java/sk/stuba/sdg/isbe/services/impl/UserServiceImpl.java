@@ -100,6 +100,9 @@ public class UserServiceImpl implements UserService {
         if (user.getMail() == null || user.getMail().isEmpty()) {
             throw new InvalidEntityException("User mail is not set!");
         }
+        if (userRepository.getUserByMail(user.getMail()) != null){
+            throw new InvalidEntityException("User with mail exist!");
+        }
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new InvalidEntityException("User password is not set!");
         }

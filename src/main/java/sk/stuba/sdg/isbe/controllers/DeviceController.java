@@ -46,6 +46,12 @@ public class DeviceController {
         return deviceService.initExpireTime(deviceId);
     }
 
+    @Operation(summary = "Update Device by ID using object")
+    @PutMapping("updateDevice/{deviceId}")
+    public Device updateDevice(@PathVariable String deviceId, @Valid @RequestBody Device changeDevice) {
+        return deviceService.updateDevice(deviceId, changeDevice);
+    }
+
     @Operation(summary = "Delete device by uid")
     @DeleteMapping("delete/{deviceId}")
     public ResponseEntity<Device> deleteDevice(@PathVariable String deviceId) {

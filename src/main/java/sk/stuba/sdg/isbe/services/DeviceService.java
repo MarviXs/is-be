@@ -15,6 +15,8 @@ public interface DeviceService {
 
     List<Device> getDevices();
 
+    Device updateDevice(String deviceId, Device changeDevice);
+
     Device getDeviceById(String deviceId);
 
     ResponseEntity<Device> deleteDevice(String deviceId);

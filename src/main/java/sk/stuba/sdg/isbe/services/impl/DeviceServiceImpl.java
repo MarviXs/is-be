@@ -99,6 +99,54 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public Device updateDevice(String deviceId, Device changeDevice) {
+        Device device = getDeviceById(deviceId);
+
+        if (changeDevice == null) {
+            throw new InvalidEntityException("Device with changes is null!");
+        }
+
+        if (changeDevice.getName() != null) {
+            device.setName(changeDevice.getName());
+        }
+        if (changeDevice.getMac() != null) {
+            device.setMac(changeDevice.getMac());
+        }
+        if (changeDevice.getType() != null) {
+            device.setType(changeDevice.getType());
+        }
+        if (changeDevice.getVersion() != null) {
+            device.setVersion(changeDevice.getVersion());
+        }
+        if (changeDevice.getFirmware() != null) {
+            device.setFirmware(changeDevice.getFirmware());
+        }
+        if (changeDevice.getJobs() != null) {
+            device.setJobs(changeDevice.getJobs());
+        }
+        if (changeDevice.getDataPointTags() != null) {
+            device.setDataPointTags(changeDevice.getDataPointTags());
+        }
+        if (changeDevice.getResponseTime() != null) {
+            device.setResponseTime(changeDevice.getResponseTime());
+        }
+        if (changeDevice.getAddTime() != null) {
+            device.setAddTime(changeDevice.getAddTime());
+        }
+        if (changeDevice.getInitExpireTime() != null) {
+            device.setInitExpireTime(changeDevice.getInitExpireTime());
+        }
+        if (changeDevice.getInitApiKey() != null) {
+            device.setInitApiKey(changeDevice.getInitApiKey());
+        }
+        device.setDeactivated(changeDevice.isDeactivated());
+
+        deviceRepository.save(device);
+
+        return device;
+    }
+
+    @Override
     public Device getDeviceById(String deviceId){
         Optional<Device> optionalDevice = deviceRepository.getDeviceByUidAndDeactivated(deviceId, false);
         if (optionalDevice.isEmpty()) {
