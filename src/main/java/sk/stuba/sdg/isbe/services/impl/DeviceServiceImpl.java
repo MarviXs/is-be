@@ -95,7 +95,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public List<Device> getDevices() {
-        return deviceRepository.getDevicesByDeactivated(false);
+        return deviceRepository.getDevicesByDeactivatedWithoutDataPointTags(false);
     }
 
     @Override
