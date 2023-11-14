@@ -89,7 +89,7 @@ public class JobStatusServiceImpl implements JobStatusService {
             changeJobsCurrentStatus(jobStatus.getJobId(), changeJobStatus.getCode());
         }
         if (changeJobStatus.getCurrentStep() != null) {
-            jobStatus.setCurrentCycle(changeJobStatus.getCurrentStep());
+            jobStatus.setCurrentStep(changeJobStatus.getCurrentStep());
         }
         if (changeJobStatus.getTotalSteps() != null) {
             jobStatus.setTotalSteps(changeJobStatus.getTotalSteps());
