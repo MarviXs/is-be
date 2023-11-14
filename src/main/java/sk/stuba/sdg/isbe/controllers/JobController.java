@@ -85,6 +85,12 @@ public class JobController {
         return jobService.getJobStatus(jobId);
     }
 
+    @Operation(summary = "Get all jobs")
+    @GetMapping("getAllJobs")
+    public List<Job> getAllJobs() {
+        return jobService.getAllJobs();
+    }
+
     @Operation(summary = "Get all jobs on a device optionally with sorting")
     @GetMapping("getAllJobsOnDevice/{deviceId}/{sortBy}/{sortDirection}")
     public List<Job> getAllJobsOnDevice(@PathVariable String deviceId,

@@ -21,7 +21,7 @@ public class Command {
     /**
      * Parameters which are executed by the device. These are given by the user when creating a command.
      */
-    private List<Integer> params;
+    private List<Double> params;
 
     /**
      * Device type on which the commands can be executed. Also helps when adding command to a recipe to prevent user from adding a non-supported command.
@@ -42,7 +42,7 @@ public class Command {
 
     public Command() {}
 
-    public Command(String name, List<Integer> params, DeviceTypeEnum deviceType) {
+    public Command(String name, List<Double> params, DeviceTypeEnum deviceType) {
         this.name = name;
         this.params = params;
         this.deviceType = deviceType;
@@ -64,11 +64,11 @@ public class Command {
         this.name = name;
     }
 
-    public List<Integer> getParams() {
+    public List<Double> getParams() {
         return params;
     }
 
-    public void setParams(List<Integer> params) {
+    public void setParams(List<Double> params) {
         this.params = params;
     }
 

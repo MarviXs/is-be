@@ -69,13 +69,13 @@ public class JobServiceTests {
         Exception exception = assertThrows(InvalidEntityException.class, () -> jobService.runJobFromRecipe(recipe.getId(), device.getUid(), 1, null, null, null));
         assertEquals("The recipe and its sub-recipes do not contain any commands!", exception.getMessage());
 
-        Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command);
 
-        Command command2 = new Command("Command2" + Instant.now().toEpochMilli(), List.of(4,5,6), DeviceTypeEnum.ESP32);
+        Command command2 = new Command("Command2" + Instant.now().toEpochMilli(), List.of(4.0,5.0,6.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command2);
 
-        Command command3 = new Command("Command3" + Instant.now().toEpochMilli(), List.of(7,8,9), DeviceTypeEnum.ESP32);
+        Command command3 = new Command("Command3" + Instant.now().toEpochMilli(), List.of(7.0,8.0,9.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command3);
 
         recipeService.addCommandToRecipe(recipe.getId(), command.getId());
@@ -116,7 +116,7 @@ public class JobServiceTests {
         Device device = new Device("device1" + Instant.now().toEpochMilli(), "ABCD", DeviceTypeEnum.ESP32);
         deviceService.createDevice(device);
 
-        Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command);
 
         Job job = new Job("Job " + Instant.now().toEpochMilli(), List.of(command));
@@ -132,7 +132,7 @@ public class JobServiceTests {
 
     @Test
     void testSkipCycle() {
-        Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
 
         Device device = new Device("device1" + Instant.now().toEpochMilli(), "ABCD", DeviceTypeEnum.ESP32);
         deviceService.createDevice(device);
@@ -153,7 +153,7 @@ public class JobServiceTests {
 
     @Test
     void testSkipStep() {
-        Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
 
         Device device = new Device("device1" + Instant.now().toEpochMilli(), "ABCD", DeviceTypeEnum.ESP32);
         deviceService.createDevice(device);
@@ -175,7 +175,7 @@ public class JobServiceTests {
 
     @Test
     void testGetJobsByStatus() {
-        Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
 
         Device device = new Device("device1" + Instant.now().toEpochMilli(), "ABCD", DeviceTypeEnum.ESP32);
         deviceService.createDevice(device);

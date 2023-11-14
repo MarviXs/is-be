@@ -231,6 +231,15 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public List<Job> getAllJobs() {
+        List<Job> jobs = jobRepository.findAll();
+        if (jobs.isEmpty()) {
+            throw new NotFoundCustomException("There are not any jobs !");
+        }
+        return jobs;
+    }
+
+    @Override
     public List<Job> getAllJobsOnDevice(String deviceId, String sortBy, String sortDirection) {
         Device device = deviceService.getDeviceById(deviceId);
         List<Job> jobs = jobRepository.getJobsByDeviceId(deviceId, SortingUtils.getSort(Job.class, sortBy, sortDirection));

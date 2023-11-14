@@ -133,7 +133,7 @@ public class RecipeServiceTests {
         Recipe recipe = new Recipe("recipe " + Instant.now().toEpochMilli(), DeviceTypeEnum.ESP32, false);
         recipeService.createRecipe(recipe);
 
-        Command command = new Command("command" + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command = new Command("command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command);
         commandService.deleteCommand(command.getId());
 
@@ -158,7 +158,7 @@ public class RecipeServiceTests {
         recipeService.createRecipe(recipe);
         recipeService.createRecipe(recipe2);
 
-        Command command = new Command("command" + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.SDG_CUBE);
+        Command command = new Command("command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.SDG_CUBE);
         commandService.createCommand(command);
 
         String recipeId = recipe.getId();
@@ -244,10 +244,10 @@ public class RecipeServiceTests {
         Recipe recipe = new Recipe("recipe " + Instant.now().toEpochMilli(), DeviceTypeEnum.ESP32, false);
         recipeService.createRecipe(recipe);
 
-        Command command = new Command("command" + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command = new Command("command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command);
 
-        Command command1 = new Command("command1" + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command1 = new Command("command1" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command1);
 
         recipeService.addCommandToRecipe(recipe.getId(), command.getId());

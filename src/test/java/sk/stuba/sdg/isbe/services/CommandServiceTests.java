@@ -42,7 +42,7 @@ public class CommandServiceTests {
         Exception exception = assertThrows(InvalidEntityException.class, () -> commandService.createCommand(new Command()));
         assertEquals("Name of the command is not valid!", exception.getMessage());
 
-        Command command = new Command("command" + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command = new Command("command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command);
         exception = assertThrows(EntityExistsException.class, () -> commandService.createCommand(command));
         assertEquals("Command with name: '" + command.getName() + "' already exists!", exception.getMessage());
@@ -57,9 +57,9 @@ public class CommandServiceTests {
 
     @Test
     void testUpdateCommand() {
-        Command existingCommand = new Command("existingCommand" + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command existingCommand = new Command("existingCommand" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(existingCommand);
-        Command command = new Command("command" + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command = new Command("command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command);
 
         Exception exception = assertThrows(InvalidEntityException.class, () -> commandService.updateCommand(command.getId(), null));
@@ -74,7 +74,7 @@ public class CommandServiceTests {
 
     @Test
     void testDeleteCommand() {
-        Command command = new Command("command " + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command = new Command("command " + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command);
         commandService.deleteCommand(command.getId());
         Exception exception = assertThrows(NotFoundCustomException.class, () -> commandService.deleteCommand(command.getId()));
@@ -105,7 +105,7 @@ public class CommandServiceTests {
 
     @Test
     void testGetCommand() {
-        Command command = new Command("command " + Instant.now().toEpochMilli(), List.of(1, 2, 3), DeviceTypeEnum.ESP32);
+        Command command = new Command("command " + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         command.setDeactivated(true);
         commandService.createCommand(command);
         Exception exception = assertThrows(NotFoundCustomException.class, () -> commandService.getCommandById(command.getId()));
@@ -119,7 +119,7 @@ public class CommandServiceTests {
 
     @Test
     void testGetCommandByName() {
-        Command command = new Command("command " + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command = new Command("command " + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command);
 
         String fakeName = command.getName() + " fake";
@@ -132,9 +132,9 @@ public class CommandServiceTests {
 
     @Test
     void testGetCommandsByDeviceType() {
-        Command command = new Command("command " + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command = new Command("command " + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command);
-        Command command2 = new Command("command2 " + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.SDG_CUBE);
+        Command command2 = new Command("command2 " + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.SDG_CUBE);
         commandService.createCommand(command2);
 
         List<Command> espCommands = commandService.getCommandsByDeviceType(DeviceTypeEnum.ESP32.name(), NONE, NONE);
@@ -151,9 +151,9 @@ public class CommandServiceTests {
 
     @Test
     void testGetCommandsByDeviceTypePageable() {
-        Command command = new Command("command " + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command = new Command("command " + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command);
-        Command command2 = new Command("command2 " + Instant.now().toEpochMilli(), List.of(1,2,3), DeviceTypeEnum.ESP32);
+        Command command2 = new Command("command2 " + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command2);
 
         List<Command> commands;

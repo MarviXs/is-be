@@ -28,6 +28,8 @@ public interface JobService {
 
     String getJobStatus(String jobId);
 
+    List<Job> getAllJobs();
+
     List<Job> getAllJobsOnDevice(String deviceId, String sortBy, String sortDirection);
 
     List<Job> getAllJobsOnDevicePageable(String deviceId, int page, int pageSize, String sortBy, String sortDirection);
