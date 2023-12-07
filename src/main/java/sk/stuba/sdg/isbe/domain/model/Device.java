@@ -12,6 +12,8 @@ import java.util.List;
 public class Device {
     @Id
     private String uid;
+    @DBRef
+    private User user;
     private String name;
     private String mac;
     private DeviceTypeEnum type;
@@ -28,6 +30,14 @@ public class Device {
     private boolean deactivated;
 
     public Device() {}
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Device(String name, String mac, DeviceTypeEnum type) {
         this.name = name;

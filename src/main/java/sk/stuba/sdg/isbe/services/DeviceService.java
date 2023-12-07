@@ -5,6 +5,7 @@ import sk.stuba.sdg.isbe.domain.model.Device;
 import sk.stuba.sdg.isbe.domain.model.Job;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DeviceService {
     Device createDevice(Device device);
@@ -28,6 +29,8 @@ public interface DeviceService {
     List<Job> getAllDeviceJobs(String deviceId);
 
     List<Job> getPendingDeviceJobs(String deviceId);
+
+    List<Map<String, Map<String, List<Job>>>> getAllJobsInDevices();
 
     String getDeviceStatus(String deviceId);
 }

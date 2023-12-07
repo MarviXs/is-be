@@ -17,8 +17,7 @@ import sk.stuba.sdg.isbe.services.JobService;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
@@ -106,6 +105,9 @@ public class DeviceServiceImpl implements DeviceService {
             throw new InvalidEntityException("Device with changes is null!");
         }
 
+        if (changeDevice.getUser() != null) {
+            device.setUser(changeDevice.getUser());
+        }
         if (changeDevice.getName() != null) {
             device.setName(changeDevice.getName());
         }
@@ -199,6 +201,26 @@ public class DeviceServiceImpl implements DeviceService {
     public List<Job> getPendingDeviceJobs(String deviceId) {
         return jobService.getAllJobsByStatus(deviceId, JobStatusEnum.JOB_PENDING.name(), NONE, NONE);
     }
+
+    @Override
+    public List<Map<String, Map<String, List<Job>>>> getAllJobsInDevices() {
+        List<Device> allDevices = deviceRepository.findAll();
+        List<Map<String, Map<String, List<Job>>>> result = new ArrayList<>();
+
+        for (Device device : allDevices) {
+            Map<String, List<Job>> idAndJobs = new HashMap<>();
+            idAndJobs.put(device.getUid(), device.getJobs());
+
+            Map<String, Map<String, List<Job>>> nameAndDetails = new HashMap<>();
+            nameAndDetails.put(device.getName(), idAndJobs);
+
+            result.add(nameAndDetails);
+        }
+
+        return result;
+    }
+
+
 
     @Override
     public String getDeviceStatus(String deviceId) {

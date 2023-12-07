@@ -12,6 +12,7 @@ import sk.stuba.sdg.isbe.services.DeviceService;
 import sk.stuba.sdg.isbe.services.JobStatusService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/device")
@@ -82,6 +83,12 @@ public class DeviceController {
             return this.deviceService.getPendingDeviceJobs(deviceId);
         }
         return this.deviceService.getAllDeviceJobs(deviceId);
+    }
+
+    @Operation(summary = "Get all jobs in devices")
+    @GetMapping("/getAllJobsInDevices")
+    public List<Map<String, Map<String, List<Job>>>> getAllJobsInDevices() {
+        return this.deviceService.getAllJobsInDevices();
     }
 
     @Operation(summary = "Update JobStatus by device uid")
