@@ -1,7 +1,9 @@
 package sk.stuba.sdg.isbe.domain.model;
 
 import org.springframework.data.annotation.Id;
-import sk.stuba.sdg.isbe.domain.enums.UserPermissionEnum;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.List;
 
 public class User {
     @Id
@@ -9,7 +11,7 @@ public class User {
     private String name;
     private String mail;
     private String password;
-    private UserPermissionEnum permissions;
+    private List<GrantedAuthority> authorities;
     private Long createdAt;
     private boolean deactivated;
 
@@ -45,12 +47,12 @@ public class User {
         this.password = password;
     }
 
-    public UserPermissionEnum getPermissions() {
-        return permissions;
+    public List<GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
-    public void setPermissions(UserPermissionEnum permissions) {
-        this.permissions = permissions;
+    public void setAuthorities(List<GrantedAuthority> authorities) {
+        this.authorities = authorities;
     }
 
     public Long getCreatedAt() {

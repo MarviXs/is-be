@@ -42,20 +42,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User loginUser(String name, String password){
         User user = userRepository.getUserByNameAndPassword(name, password);
-        validateUser(user);
         if (user.getName() == null || user.getName().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new EntityExistsException("User name or password wrong!");
-        }
-
-        return user;
-    }
-
-    @Override
-    public User googleLoginUser(String mail){
-        User user = userRepository.getUserByMail(mail);
-        validateUser(user);
-        if (user.getMail() == null || user.getMail().isEmpty()) {
-            throw new EntityExistsException("User mail wrong!");
         }
 
         return user;
@@ -78,8 +66,8 @@ public class UserServiceImpl implements UserService {
         if (changeUser.getPassword() != null) {
             user.setPassword(changeUser.getPassword());
         }
-        if (changeUser.getPermissions() != null) {
-            user.setPermissions(changeUser.getPermissions());
+        if (changeUser.getAuthorities() != null) {
+            user.setAuthorities(changeUser.getAuthorities());
         }
 
         return userRepository.save(user);

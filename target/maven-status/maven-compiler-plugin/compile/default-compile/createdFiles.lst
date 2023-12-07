@@ -57,6 +57,7 @@ sk/stuba/sdg/isbe/handlers/exceptions/EntityExistsException.class
 sk/stuba/sdg/isbe/repositories/RecipeRepository.class
 sk/stuba/sdg/isbe/repositories/LastStoredDataRepository.class
 sk/stuba/sdg/isbe/IsBeApplication.class
+sk/stuba/sdg/isbe/configuration/JwtAuthFilter.class
 sk/stuba/sdg/isbe/events/EventConstants.class
 sk/stuba/sdg/isbe/controllers/RecipeController.class
 sk/stuba/sdg/isbe/domain/model/Scenario.class
@@ -75,6 +76,7 @@ sk/stuba/sdg/isbe/services/DataPointTagService.class
 sk/stuba/sdg/isbe/events/ScenarioProcessor.class
 sk/stuba/sdg/isbe/domain/model/StoredResolvedScenario.class
 sk/stuba/sdg/isbe/services/JobService.class
+sk/stuba/sdg/isbe/utilities/JwtUtils.class
 sk/stuba/sdg/isbe/controllers/TestController.class
 sk/stuba/sdg/isbe/controllers/JobController.class
 sk/stuba/sdg/isbe/services/impl/CollectionServiceImpl.class

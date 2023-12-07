@@ -3,9 +3,12 @@ package sk.stuba.sdg.isbe.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sk.stuba.sdg.isbe.domain.model.User;
 import sk.stuba.sdg.isbe.services.UserService;
+import sk.stuba.sdg.isbe.utilities.JwtUtils;
 
 import java.util.List;
 
@@ -31,17 +34,24 @@ public class UserController {
         return userService.getUserById(userId);
     }
 
+//    @Operation(summary = "Login user by name and password")
+//    @PostMapping("/loginUser/{name}/{password}")
+//    public User loginUser(@PathVariable String name, @PathVariable String password){
+//        return userService.loginUser(name, password);
+//    }
+
     @Operation(summary = "Login user by name and password")
-    @PostMapping("/loginUser/{name}/{password}")
-    public User loginUser(@PathVariable String name, @PathVariable String password){
-        return userService.loginUser(name, password);
+    @PostMapping("/login/{name}/{password}")
+    public ResponseEntity<?> loginUser(@PathVariable String name, @PathVariable String password){
+        User user = userService.loginUser(name, password);
+        if (user != null) {
+            String token = JwtUtils.generateToken(user.getUid());
+            return ResponseEntity.ok(token);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        }
     }
 
-    @Operation(summary = "Login user by email")
-    @PostMapping("/googleLoginUser/{mail}")
-    public User googleLoginUser(@PathVariable String mail){
-        return userService.googleLoginUser(mail);
-    }
 
     @Operation(summary = "Update user through json")
     @PostMapping("/updateUser/{userId}")
