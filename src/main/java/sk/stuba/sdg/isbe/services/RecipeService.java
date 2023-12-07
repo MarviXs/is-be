@@ -42,4 +42,7 @@ public interface RecipeService {
     List<Recipe> getSubRecipesPageable(String deviceType, int page, int pageSize, String sortBy, String sortDirection);
 
     List<Recipe> getRecipesContainingCommand(Command command);
+
+    List<Command> getCommandsForRecipe(String recipeId);
+    List<Recipe> getSubRecipesForRecipe(String recipeId);
 }

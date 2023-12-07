@@ -3,6 +3,7 @@ package sk.stuba.sdg.isbe.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 import sk.stuba.sdg.isbe.domain.enums.DeviceTypeEnum;
 import sk.stuba.sdg.isbe.domain.model.Command;
 import sk.stuba.sdg.isbe.domain.model.Recipe;
@@ -378,6 +379,21 @@ public class RecipeServiceImpl implements RecipeService {
         }
         throw new NotFoundCustomException("Command not found on index: " + index + "!"
                 + " Commands with this ID can be found on indexes: " + String.join(", ", commandIndexes));
+    }
+
+
+    @Override
+    public List<Command> getCommandsForRecipe(String recipeId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new NotFoundException("Recipe not found with ID: " + recipeId));
+        return recipe.getCommands();
+    }
+
+    @Override
+    public List<Recipe> getSubRecipesForRecipe(String recipeId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new NotFoundException("Recipe not found with ID: " + recipeId));
+        return recipe.getSubRecipes();
     }
 
     private boolean recipeWithNameExists(String name) {

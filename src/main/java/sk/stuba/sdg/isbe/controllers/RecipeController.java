@@ -4,7 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sk.stuba.sdg.isbe.domain.model.Command;
 import sk.stuba.sdg.isbe.domain.model.Recipe;
 import sk.stuba.sdg.isbe.services.RecipeService;
 
@@ -132,5 +134,17 @@ public class RecipeController {
                                               @PathVariable @Parameter(description = "Unsorted -> NONE or NULL") String sortBy,
                                               @PathVariable @Parameter(description = "Unsorted -> NONE or NULL") String sortDirection) {
         return recipeService.getSubRecipesPageable(deviceType, page, pageSize, sortBy, sortDirection);
+    }
+
+    @GetMapping("commands/{recipeId}")
+    public ResponseEntity<List<Command>> getCommandsForRecipe(@PathVariable String recipeId) {
+        List<Command> commands = recipeService.getCommandsForRecipe(recipeId);
+        return ResponseEntity.ok(commands);
+    }
+
+    @GetMapping("subrecipes/{recipeId}")
+    public ResponseEntity<List<Recipe>> getSubRecipesForRecipe(@PathVariable String recipeId) {
+        List<Recipe> subRecipes = recipeService.getSubRecipesForRecipe(recipeId);
+        return ResponseEntity.ok(subRecipes);
     }
 }
