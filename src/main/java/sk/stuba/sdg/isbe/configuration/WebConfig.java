@@ -17,8 +17,8 @@ public class WebConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeHttpRequests()
-                .requestMatchers("/api/user/create").permitAll() // Allow everyone to access the login endpoint
-                .requestMatchers("/api/user/login/**").permitAll() // Allow everyone to access the login endpoint
+                .requestMatchers("/api/user/create").permitAll()
+                .requestMatchers("/api/user/login/**").permitAll()
                 .anyRequest().authenticated() // All other requests must be authenticated
                 .and()
                 .sessionManagement()
