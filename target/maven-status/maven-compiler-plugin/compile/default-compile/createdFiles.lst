@@ -15,6 +15,7 @@ sk/stuba/sdg/isbe/services/JobStatusService.class
 sk/stuba/sdg/isbe/configuration/WebConfig.class
 sk/stuba/sdg/isbe/repositories/DataPointTagRepository.class
 sk/stuba/sdg/isbe/services/impl/UserServiceImpl.class
+sk/stuba/sdg/isbe/services/impl/ModuleServiceImpl.class
 sk/stuba/sdg/isbe/repositories/DeviceRepository.class
 sk/stuba/sdg/isbe/handlers/exceptions/EntityExistsException.class
 sk/stuba/sdg/isbe/domain/model/Recipe.class
@@ -35,6 +36,7 @@ sk/stuba/sdg/isbe/handlers/GlobalExceptionHandler.class
 sk/stuba/sdg/isbe/repositories/CommandRepository.class
 sk/stuba/sdg/isbe/utilities/JobStatusUtils.class
 sk/stuba/sdg/isbe/repositories/JobStatusRepository.class
+sk/stuba/sdg/isbe/services/ModuleService.class
 sk/stuba/sdg/isbe/services/impl/DeviceServiceImpl.class
 sk/stuba/sdg/isbe/controllers/CommandController.class
 sk/stuba/sdg/isbe/handlers/exceptions/NotFoundCustomException.class
@@ -45,6 +47,7 @@ sk/stuba/sdg/isbe/domain/enums/ScenarioActionType.class
 sk/stuba/sdg/isbe/events/DataStoredEvent.class
 sk/stuba/sdg/isbe/services/DataPointTagService.class
 sk/stuba/sdg/isbe/events/ScenarioProcessor.class
+sk/stuba/sdg/isbe/controllers/ModuleController.class
 sk/stuba/sdg/isbe/domain/model/StoredResolvedScenario.class
 sk/stuba/sdg/isbe/services/RecipeService.class
 sk/stuba/sdg/isbe/services/StoredResolvedScenarioService.class
@@ -53,6 +56,7 @@ sk/stuba/sdg/isbe/services/JobService.class
 sk/stuba/sdg/isbe/controllers/TestController.class
 sk/stuba/sdg/isbe/controllers/JobController.class
 sk/stuba/sdg/isbe/domain/model/Module.class
+sk/stuba/sdg/isbe/repositories/ModuleRepository.class
 sk/stuba/sdg/isbe/domain/model/Device.class
 sk/stuba/sdg/isbe/services/impl/JobServiceImpl.class
 sk/stuba/sdg/isbe/domain/model/DataPointTag.class
@@ -77,6 +81,7 @@ sk/stuba/sdg/isbe/domain/enums/ScenarioLevelEnum.class
 sk/stuba/sdg/isbe/domain/model/Collection.class
 sk/stuba/sdg/isbe/services/impl/ScenarioServiceImpl.class
 sk/stuba/sdg/isbe/domain/model/DataPoint.class
+sk/stuba/sdg/isbe/repositories/CollectionRepository.class
 sk/stuba/sdg/isbe/controllers/JobStatusController.class
 sk/stuba/sdg/isbe/controllers/StoredResolvedScenarioController.class
 sk/stuba/sdg/isbe/repositories/UserRepository.class
