@@ -263,13 +263,13 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<Device> getDevicesSharedWithUser(String userId) {
+    public List<Device> getDevicesSharedWithUser(String mail) {
         List<Device> allDevices = deviceRepository.findAll();
         List<Device> sharedDevices = new ArrayList<>();
 
         for (Device device : allDevices) {
             List<User> sharedUsers = device.getSharedUsers();
-            if (sharedUsers != null && sharedUsers.stream().anyMatch(user -> user.getUid().equals(userId))) {
+            if (sharedUsers != null && sharedUsers.stream().anyMatch(user -> user.getMail().equals(mail))) {
                 sharedDevices.add(device);
             }
         }

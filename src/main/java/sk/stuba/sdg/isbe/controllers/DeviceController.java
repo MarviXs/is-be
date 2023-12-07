@@ -122,9 +122,9 @@ public class DeviceController {
     }
 
     @Operation(summary = "Get devices shared with a specific user")
-    @GetMapping("/getDevicesSharedWithUser/{userId}")
-    public List<Device> getDevicesSharedWithUser(@PathVariable String userId) {
-        return deviceService.getDevicesSharedWithUser(userId);
+    @GetMapping("/getDevicesSharedWithUser/{mail}")
+    public List<Device> getDevicesSharedWithUser(@PathVariable String mail) {
+        return deviceService.getDevicesSharedWithUser(mail);
     }
 
     @Operation(summary = "Get status of the device")
