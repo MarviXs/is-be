@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import sk.stuba.sdg.isbe.domain.model.Device;
 import sk.stuba.sdg.isbe.domain.model.Job;
 import sk.stuba.sdg.isbe.domain.model.JobStatus;
+import sk.stuba.sdg.isbe.domain.model.User;
 import sk.stuba.sdg.isbe.services.DeviceService;
 import sk.stuba.sdg.isbe.services.JobStatusService;
 
@@ -97,6 +98,33 @@ public class DeviceController {
         deviceService.getDeviceById(deviceId);
 
         return jobStatusService.updateJobStatus(jobStatusId, changeJobStatus, deviceId);
+    }
+
+    @Operation(summary = "Add a shared user to a device")
+    @PutMapping("/addSharedUser/{deviceId}/{userId}")
+    public ResponseEntity<Device> addSharedUserToDevice(@PathVariable String deviceId, @PathVariable String userId) {
+        Device updatedDevice = deviceService.addSharedUserToDevice(deviceId, userId);
+        return ResponseEntity.ok(updatedDevice);
+    }
+
+    @Operation(summary = "Remove a shared user from a device")
+    @DeleteMapping("/removeSharedUser/{deviceId}/{userId}")
+    public ResponseEntity<Device> removeSharedUserFromDevice(@PathVariable String deviceId, @PathVariable String userId) {
+        Device updatedDevice = deviceService.removeSharedUserFromDevice(deviceId, userId);
+        return ResponseEntity.ok(updatedDevice);
+    }
+
+    @Operation(summary = "Get shared users of a device")
+    @GetMapping("/getSharedUsers/{deviceId}")
+    public ResponseEntity<List<User>> getSharedUsers(@PathVariable String deviceId) {
+        List<User> sharedUsers = deviceService.getSharedUsers(deviceId);
+        return ResponseEntity.ok(sharedUsers);
+    }
+
+    @Operation(summary = "Get devices shared with a specific user")
+    @GetMapping("/getDevicesSharedWithUser/{userId}")
+    public List<Device> getDevicesSharedWithUser(@PathVariable String userId) {
+        return deviceService.getDevicesSharedWithUser(userId);
     }
 
     @Operation(summary = "Get status of the device")

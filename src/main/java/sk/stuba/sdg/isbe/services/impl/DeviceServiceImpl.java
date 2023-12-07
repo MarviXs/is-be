@@ -8,8 +8,10 @@ import sk.stuba.sdg.isbe.domain.enums.JobStatusEnum;
 import sk.stuba.sdg.isbe.domain.model.DataPointTag;
 import sk.stuba.sdg.isbe.domain.model.Device;
 import sk.stuba.sdg.isbe.domain.model.Job;
+import sk.stuba.sdg.isbe.domain.model.User;
 import sk.stuba.sdg.isbe.handlers.exceptions.*;
 import sk.stuba.sdg.isbe.repositories.DeviceRepository;
+import sk.stuba.sdg.isbe.repositories.UserRepository;
 import sk.stuba.sdg.isbe.services.DataPointTagService;
 import sk.stuba.sdg.isbe.services.DeviceService;
 import sk.stuba.sdg.isbe.services.JobService;
@@ -30,6 +32,9 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Autowired
     private DeviceRepository deviceRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private JobService jobService;
@@ -220,7 +225,57 @@ public class DeviceServiceImpl implements DeviceService {
         return result;
     }
 
+    // Method to add a shared user to a device
+    @Override
+    public Device addSharedUserToDevice(String deviceId, String userId) {
+        Device device = getDeviceById(deviceId);
+        User userToAdd = userRepository.findById(userId).orElseThrow(() -> new NotFoundCustomException("User not found!"));
 
+        if (device.getSharedUsers() == null) {
+            device.setSharedUsers(new ArrayList<>());
+        }
+
+        device.getSharedUsers().add(userToAdd);
+        deviceRepository.save(device);
+
+        return device;
+    }
+
+    // Method to remove a shared user from a device
+    @Override
+    public Device removeSharedUserFromDevice(String deviceId, String userId) {
+        Device device = getDeviceById(deviceId);
+        User userToRemove = userRepository.findById(userId).orElseThrow(() -> new NotFoundCustomException("User not found!"));
+
+        if (device.getSharedUsers() != null) {
+            device.getSharedUsers().remove(userToRemove);
+            deviceRepository.save(device);
+        }
+
+        return device;
+    }
+
+    // Method to get shared users of a device
+    @Override
+    public List<User> getSharedUsers(String deviceId) {
+        Device device = getDeviceById(deviceId);
+        return device.getSharedUsers();
+    }
+
+    @Override
+    public List<Device> getDevicesSharedWithUser(String userId) {
+        List<Device> allDevices = deviceRepository.findAll();
+        List<Device> sharedDevices = new ArrayList<>();
+
+        for (Device device : allDevices) {
+            List<User> sharedUsers = device.getSharedUsers();
+            if (sharedUsers != null && sharedUsers.stream().anyMatch(user -> user.getUid().equals(userId))) {
+                sharedDevices.add(device);
+            }
+        }
+
+        return sharedDevices;
+    }
 
     @Override
     public String getDeviceStatus(String deviceId) {

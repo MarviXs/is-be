@@ -14,6 +14,8 @@ public class Device {
     private String uid;
     @DBRef
     private User user;
+    @DBRef
+    private List<User> sharedUsers;
     private String name;
     private String mac;
     private DeviceTypeEnum type;
@@ -31,6 +33,12 @@ public class Device {
 
     public Device() {}
 
+    public Device(String name, String mac, DeviceTypeEnum type) {
+        this.name = name;
+        this.mac = mac;
+        this.type = type;
+    }
+
     public User getUser() {
         return user;
     }
@@ -39,10 +47,12 @@ public class Device {
         this.user = user;
     }
 
-    public Device(String name, String mac, DeviceTypeEnum type) {
-        this.name = name;
-        this.mac = mac;
-        this.type = type;
+    public List<User> getSharedUsers() {
+        return sharedUsers;
+    }
+
+    public void setSharedUsers(List<User> sharedUsers) {
+        this.sharedUsers = sharedUsers;
     }
 
     public List<Job> getJobs() {
