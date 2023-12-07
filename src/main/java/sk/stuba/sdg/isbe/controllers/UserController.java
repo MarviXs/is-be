@@ -5,12 +5,16 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import sk.stuba.sdg.isbe.domain.model.User;
 import sk.stuba.sdg.isbe.services.UserService;
 import sk.stuba.sdg.isbe.utilities.JwtUtils;
 
 import java.util.List;
+import java.util.ArrayList;
+
 
 @RestController
 @RequestMapping("api/user")
@@ -23,8 +27,12 @@ public class UserController {
     public List<User> getUsers() {return userService.getUsers();}
 
     @Operation(summary = "Create new user")
-    @PostMapping("/create")
-    public User createUser(@Valid @RequestBody User user) {
+    @PostMapping("/create/{role}")
+    public User createUser(@Valid @RequestBody User user,@PathVariable String role) {
+        GrantedAuthority authority = new SimpleGrantedAuthority(role);
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(authority);
+        user.setAuthorities(authorities);
         return userService.createUser(user);
     }
 
@@ -33,12 +41,6 @@ public class UserController {
     public User getUserById(@PathVariable String userId) {
         return userService.getUserById(userId);
     }
-
-//    @Operation(summary = "Login user by name and password")
-//    @PostMapping("/loginUser/{name}/{password}")
-//    public User loginUser(@PathVariable String name, @PathVariable String password){
-//        return userService.loginUser(name, password);
-//    }
 
     @Operation(summary = "Login user by name and password")
     @PostMapping("/login/{name}/{password}")

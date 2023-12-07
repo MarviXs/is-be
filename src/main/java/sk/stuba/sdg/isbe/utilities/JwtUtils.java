@@ -23,10 +23,10 @@ public class JwtUtils {
         return createToken(claims, userId);
     }
 
-    private static String createToken(Map<String, Object> claims, String userName) {
+    private static String createToken(Map<String, Object> claims, String userId) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(userName)
+                .setSubject(userId)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();

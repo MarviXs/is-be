@@ -55,6 +55,10 @@ public class User {
         this.authorities = authorities;
     }
 
+    public void addAuthority(GrantedAuthority authority) {
+        this.authorities.add(authority);
+    }
+
     public Long getCreatedAt() {
         return createdAt;
     }
