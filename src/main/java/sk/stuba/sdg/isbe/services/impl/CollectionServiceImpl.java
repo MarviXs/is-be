@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import sk.stuba.sdg.isbe.domain.model.Collection;
 import sk.stuba.sdg.isbe.domain.model.Module;
+
+import sk.stuba.sdg.isbe.domain.model.Scenario;
 import sk.stuba.sdg.isbe.handlers.exceptions.*;
 import sk.stuba.sdg.isbe.repositories.CollectionRepository;
 import sk.stuba.sdg.isbe.services.CollectionService;
@@ -35,6 +37,11 @@ public class CollectionServiceImpl implements CollectionService {
         collectionRepository.save(collection);
 
         return collection;
+    }
+
+    @Override
+    public List<Collection> getCollections() {
+        return collectionRepository.findAll();
     }
 
     @Override

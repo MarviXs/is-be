@@ -9,6 +9,8 @@ import java.util.List;
 public interface CollectionService {
     Collection createCollection(Collection collection);
 
+    List<Collection> getCollections();
+
     Collection getCollectionById(String collectionId);
 
     List<Module> getModulesInCollection(String collectionId);
