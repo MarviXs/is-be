@@ -1,8 +1,10 @@
 package sk.stuba.sdg.isbe.domain.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document
@@ -10,7 +12,8 @@ public class Module {
     @Id
     private String uid;
     private String name;
-    private List<Device> devices;
+    @DBRef
+    private List<Device> devices = new ArrayList<>();;
     private Long createdAt;
 
     public String getUid() {
