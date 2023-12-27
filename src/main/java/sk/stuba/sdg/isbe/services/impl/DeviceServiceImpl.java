@@ -43,7 +43,7 @@ public class DeviceServiceImpl implements DeviceService {
     private DataPointTagService dataPointTagService;
 
     @Override
-    public Device createDevice(Device device) {
+    public Device createDevice(Device device, User owner) {
         if (device.getName() == null || device.getName().equals(EMPTY_STRING)) {
             throw new InvalidEntityException("Device has no name set!");
         }
@@ -56,6 +56,7 @@ public class DeviceServiceImpl implements DeviceService {
 
         device.setInitExpireTime((long) -1);
         device.setAddTime(Instant.now().toEpochMilli());
+        device.setUser(owner);
         deviceRepository.save(device);
 
         return device;

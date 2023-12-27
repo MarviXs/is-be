@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface DeviceService {
-    Device createDevice(Device device);
+    Device createDevice(Device device, User owner);
 
     Device initializeDevice(String macAddress);
 

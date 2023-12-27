@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sk.stuba.sdg.isbe.domain.model.Device;
 import sk.stuba.sdg.isbe.domain.model.Job;
@@ -32,8 +33,8 @@ public class DeviceController {
 
     @Operation(summary = "Add new device into the system")
     @PostMapping("/create")
-    public Device createDevice(@Valid @RequestBody Device device) {
-        return this.deviceService.createDevice(device);
+    public Device createDevice(@Valid @RequestBody Device device, @AuthenticationPrincipal User user) {
+        return this.deviceService.createDevice(device, user);
     }
 
     @Operation(summary = "Initialize device by mac address in 1 min time window")
