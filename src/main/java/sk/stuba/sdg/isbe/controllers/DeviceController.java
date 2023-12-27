@@ -27,8 +27,8 @@ public class DeviceController {
     private JobStatusService jobStatusService;
 
     @GetMapping
-    public List<Device> getDevices() {
-        return this.deviceService.getDevices();
+    public List<Device> getDevices(@AuthenticationPrincipal User user) {
+        return this.deviceService.getDevicesByUser(user);
     }
 
     @Operation(summary = "Add new device into the system")

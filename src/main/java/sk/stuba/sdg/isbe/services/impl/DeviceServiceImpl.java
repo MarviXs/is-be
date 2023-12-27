@@ -104,6 +104,11 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public List<Device> getDevicesByUser(User user) {
+        return deviceRepository.getDevicesByUserDeactivatedWithoutDataPointTags(user.getUid(), false);
+    }
+
+    @Override
     public Device updateDevice(String deviceId, Device changeDevice) {
         Device device = getDeviceById(deviceId);
 

@@ -17,6 +17,8 @@ public interface DeviceService {
 
     List<Device> getDevices();
 
+    List<Device> getDevicesByUser(User user);
+
     Device updateDevice(String deviceId, Device changeDevice);
 
     Device getDeviceById(String deviceId);
