@@ -74,4 +74,13 @@ public class User {
     public void setDeactivated(boolean deactivated) {
         this.deactivated = deactivated;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof User) {
+            User user = (User) obj;
+            return this.uid.equals(user.getUid());
+        }
+        return false;
+    }
 }

@@ -102,9 +102,9 @@ public class DeviceController {
     }
 
     @Operation(summary = "Add a shared user to a device")
-    @PutMapping("/addSharedUser/{deviceId}/{userId}")
-    public ResponseEntity<Device> addSharedUserToDevice(@PathVariable String deviceId, @PathVariable String userId) {
-        Device updatedDevice = deviceService.addSharedUserToDevice(deviceId, userId);
+    @PutMapping("/addSharedUser/{deviceId}/{userMail}")
+    public ResponseEntity<Device> addSharedUserToDevice(@PathVariable String deviceId, @PathVariable String userMail) {
+        Device updatedDevice = deviceService.addSharedUserToDevice(deviceId, userMail);
         return ResponseEntity.ok(updatedDevice);
     }
 
@@ -122,10 +122,10 @@ public class DeviceController {
         return ResponseEntity.ok(sharedUsers);
     }
 
-    @Operation(summary = "Get devices shared with a specific user")
-    @GetMapping("/getDevicesSharedWithUser/{mail}")
-    public List<Device> getDevicesSharedWithUser(@PathVariable String mail) {
-        return deviceService.getDevicesSharedWithUser(mail);
+    @Operation(summary = "Get devices shared with a user")
+    @GetMapping("/getDevicesSharedWithUser")
+    public List<Device> getDevicesSharedWithUser(@AuthenticationPrincipal User user) {
+        return deviceService.getDevicesSharedWithUser(user);
     }
 
     @Operation(summary = "Get status of the device")

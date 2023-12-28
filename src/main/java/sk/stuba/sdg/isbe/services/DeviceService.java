@@ -41,7 +41,7 @@ public interface DeviceService {
 
     List<User> getSharedUsers(String deviceId);
 
-    List<Device> getDevicesSharedWithUser(String userId);
+    List<Device> getDevicesSharedWithUser(User user);
 
     String getDeviceStatus(String deviceId);
 }
