@@ -348,7 +348,7 @@ public class JobServiceImpl implements JobService {
             }
         }
         if (job.getScheduledMinute() != null) {
-            if (job.getScheduledMinute() < 0 || job.getScheduledMinute() > 23) {
+            if (job.getScheduledMinute() < 0 || job.getScheduledMinute() > 59) {
                 throw new InvalidEntityException("Scheduled minute is invalid: " + job.getScheduledMinute() + "!");
             }
         }
