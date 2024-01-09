@@ -168,4 +168,9 @@ public class Device {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return this.getUid().hashCode();
+    }
+
 }
