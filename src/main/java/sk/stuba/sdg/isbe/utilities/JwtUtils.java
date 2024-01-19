@@ -18,9 +18,10 @@ import java.util.function.Function;
 public class JwtUtils {
 
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
-    public static String generateToken(String userId) {
+    public static String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userId);
+        claims.put("authorities", user.getAuthorities());
+        return createToken(claims, user.getUid());
     }
 
     private static String createToken(Map<String, Object> claims, String userId) {
