@@ -47,7 +47,7 @@ public class UserController {
     public ResponseEntity<?> loginUser(@PathVariable String name, @PathVariable String password){
         User user = userService.loginUser(name, password);
         if (user != null) {
-            String token = JwtUtils.generateToken(user.getUid());
+            String token = JwtUtils.generateToken(user);
             return ResponseEntity.ok(token);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
