@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sk.stuba.sdg.isbe.domain.model.Device;
 import sk.stuba.sdg.isbe.domain.model.Job;
@@ -26,14 +27,14 @@ public class DeviceController {
     private JobStatusService jobStatusService;
 
     @GetMapping
-    public List<Device> getDevices() {
-        return this.deviceService.getDevices();
+    public List<Device> getDevices(@AuthenticationPrincipal User user) {
+        return this.deviceService.getDevicesByUser(user);
     }
 
     @Operation(summary = "Add new device into the system")
     @PostMapping("/create")
-    public Device createDevice(@Valid @RequestBody Device device) {
-        return this.deviceService.createDevice(device);
+    public Device createDevice(@Valid @RequestBody Device device, @AuthenticationPrincipal User user) {
+        return this.deviceService.createDevice(device, user);
     }
 
     @Operation(summary = "Initialize device by mac address in 1 min time window")
@@ -101,9 +102,9 @@ public class DeviceController {
     }
 
     @Operation(summary = "Add a shared user to a device")
-    @PutMapping("/addSharedUser/{deviceId}/{userId}")
-    public ResponseEntity<Device> addSharedUserToDevice(@PathVariable String deviceId, @PathVariable String userId) {
-        Device updatedDevice = deviceService.addSharedUserToDevice(deviceId, userId);
+    @PutMapping("/addSharedUser/{deviceId}/{userMail}")
+    public ResponseEntity<Device> addSharedUserToDevice(@PathVariable String deviceId, @PathVariable String userMail) {
+        Device updatedDevice = deviceService.addSharedUserToDevice(deviceId, userMail);
         return ResponseEntity.ok(updatedDevice);
     }
 
@@ -121,10 +122,10 @@ public class DeviceController {
         return ResponseEntity.ok(sharedUsers);
     }
 
-    @Operation(summary = "Get devices shared with a specific user")
-    @GetMapping("/getDevicesSharedWithUser/{mail}")
-    public List<Device> getDevicesSharedWithUser(@PathVariable String mail) {
-        return deviceService.getDevicesSharedWithUser(mail);
+    @Operation(summary = "Get devices shared with a user")
+    @GetMapping("/getDevicesSharedWithUser")
+    public List<Device> getDevicesSharedWithUser(@AuthenticationPrincipal User user) {
+        return deviceService.getDevicesSharedWithUser(user);
     }
 
     @Operation(summary = "Get status of the device")

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sk.stuba.sdg.isbe.domain.model.Collection;
+import sk.stuba.sdg.isbe.domain.model.Device;
 import sk.stuba.sdg.isbe.domain.model.Module;
 import sk.stuba.sdg.isbe.services.CollectionService;
 
@@ -17,6 +18,12 @@ public class CollectionController {
 
     @Autowired
     private CollectionService collectionService;
+
+    @Operation(summary = "Get all collections")
+    @GetMapping
+    public List<Collection> getCollections() {
+        return collectionService.getCollections();
+    }
 
     @Operation(summary = "Create a new collection")
     @PostMapping("/create")

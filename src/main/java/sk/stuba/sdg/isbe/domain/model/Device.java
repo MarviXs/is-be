@@ -158,4 +158,19 @@ public class Device {
     public void setDeactivated(boolean deactivated) {
         this.deactivated = deactivated;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Device) {
+            Device device = (Device) obj;
+            return device.getUid().equals(this.getUid());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getUid().hashCode();
+    }
+
 }

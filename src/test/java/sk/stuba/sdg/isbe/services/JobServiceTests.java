@@ -62,7 +62,7 @@ public class JobServiceTests {
         recipeService.createRecipe(recipe);
 
         Device device = new Device("device1" + Instant.now().toEpochMilli(), "ABCD", DeviceTypeEnum.ESP32);
-        deviceService.createDevice(device);
+        deviceService.createDevice(device, null);
 
         recipe.setSubRecipe(false);
         recipeService.updateRecipe(recipe.getId(), recipe);
@@ -114,7 +114,7 @@ public class JobServiceTests {
     @Test
     void testResetJob() {
         Device device = new Device("device1" + Instant.now().toEpochMilli(), "ABCD", DeviceTypeEnum.ESP32);
-        deviceService.createDevice(device);
+        deviceService.createDevice(device, null);
 
         Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
         commandService.createCommand(command);
@@ -135,7 +135,7 @@ public class JobServiceTests {
         Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
 
         Device device = new Device("device1" + Instant.now().toEpochMilli(), "ABCD", DeviceTypeEnum.ESP32);
-        deviceService.createDevice(device);
+        deviceService.createDevice(device, null);
 
         Job job = new Job("Job" + Instant.now().toEpochMilli(), List.of(command));
 
@@ -156,7 +156,7 @@ public class JobServiceTests {
         Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
 
         Device device = new Device("device1" + Instant.now().toEpochMilli(), "ABCD", DeviceTypeEnum.ESP32);
-        deviceService.createDevice(device);
+        deviceService.createDevice(device, null);
 
         Job job = new Job("Job" + Instant.now().toEpochMilli(), List.of(command));
 
@@ -178,7 +178,7 @@ public class JobServiceTests {
         Command command = new Command("Command" + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32);
 
         Device device = new Device("device1" + Instant.now().toEpochMilli(), "ABCD", DeviceTypeEnum.ESP32);
-        deviceService.createDevice(device);
+        deviceService.createDevice(device, null);
 
         Job job = new Job("Job" + Instant.now().toEpochMilli(), List.of(command));
         Job job2 = new Job("Job" + Instant.now().toEpochMilli(), List.of(command));

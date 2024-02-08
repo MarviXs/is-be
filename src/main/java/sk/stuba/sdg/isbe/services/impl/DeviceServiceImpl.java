@@ -43,7 +43,7 @@ public class DeviceServiceImpl implements DeviceService {
     private DataPointTagService dataPointTagService;
 
     @Override
-    public Device createDevice(Device device) {
+    public Device createDevice(Device device, User owner) {
         if (device.getName() == null || device.getName().equals(EMPTY_STRING)) {
             throw new InvalidEntityException("Device has no name set!");
         }
@@ -56,6 +56,7 @@ public class DeviceServiceImpl implements DeviceService {
 
         device.setInitExpireTime((long) -1);
         device.setAddTime(Instant.now().toEpochMilli());
+        device.setUser(owner);
         deviceRepository.save(device);
 
         return device;
@@ -100,6 +101,11 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public List<Device> getDevices() {
         return deviceRepository.getDevicesByDeactivatedWithoutDataPointTags(false);
+    }
+
+    @Override
+    public List<Device> getDevicesByUser(User user) {
+        return deviceRepository.getDevicesByUserDeactivatedWithoutDataPointTags(user.getUid(), false);
     }
 
     @Override
@@ -227,9 +233,17 @@ public class DeviceServiceImpl implements DeviceService {
 
     // Method to add a shared user to a device
     @Override
-    public Device addSharedUserToDevice(String deviceId, String userId) {
+    public Device addSharedUserToDevice(String deviceId, String userMail) {
         Device device = getDeviceById(deviceId);
-        User userToAdd = userRepository.findById(userId).orElseThrow(() -> new NotFoundCustomException("User not found!"));
+        User userToAdd = userRepository.getUserByMail(userMail);
+
+        if(userToAdd == null) {
+            throw new NotFoundCustomException("User not found!");
+        }
+
+        if(device == null) {
+            throw new NotFoundCustomException("Device not found!");
+        }
 
         if (device.getSharedUsers() == null) {
             device.setSharedUsers(new ArrayList<>());
@@ -263,13 +277,13 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<Device> getDevicesSharedWithUser(String mail) {
-        List<Device> allDevices = deviceRepository.findAll();
+    public List<Device> getDevicesSharedWithUser(User user) {
+        List<Device> allDevices = deviceRepository.getDevicesByDeactivatedWithoutDataPointTags(false);
         List<Device> sharedDevices = new ArrayList<>();
 
         for (Device device : allDevices) {
             List<User> sharedUsers = device.getSharedUsers();
-            if (sharedUsers != null && sharedUsers.stream().anyMatch(user -> user.getMail().equals(mail))) {
+            if (sharedUsers != null && sharedUsers.stream().anyMatch(u -> u.getUid().equals(user.getUid()))) {
                 sharedDevices.add(device);
             }
         }
