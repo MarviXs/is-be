@@ -13,6 +13,7 @@ import sk.stuba.sdg.isbe.domain.model.*;
 import sk.stuba.sdg.isbe.events.DataStoredEvent;
 import sk.stuba.sdg.isbe.handlers.exceptions.InvalidEntityException;
 import sk.stuba.sdg.isbe.handlers.exceptions.NotFoundCustomException;
+import sk.stuba.sdg.isbe.repositories.DataPointTagRepository;
 import sk.stuba.sdg.isbe.repositories.JobRepository;
 import sk.stuba.sdg.isbe.repositories.JobStatusRepository;
 import sk.stuba.sdg.isbe.repositories.StoredDataRepository;
@@ -52,6 +53,9 @@ public class JobStatusServiceImpl implements JobStatusService {
 
     @Autowired
     StoredDataService storedDataService;
+
+    @Autowired
+    private DataPointTagRepository dataPointTagRepository;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -113,8 +117,10 @@ public class JobStatusServiceImpl implements JobStatusService {
                     storedData.setMeasureAdd(Instant.now().toEpochMilli());
                     storedData.setDeviceId(deviceId);
                     storedDataService.upsertStoredData(storedData);
+                    dataPointTag.addStoredData(storedData);
                     listStoredData.add(storedData);
                 }
+                dataPointTagRepository.saveAll(dataPointTags);
                 DataStoredEvent dataStoredEvent = new DataStoredEvent(this, listStoredData, deviceId);
                 eventPublisher.publishEvent(dataStoredEvent);
             }
