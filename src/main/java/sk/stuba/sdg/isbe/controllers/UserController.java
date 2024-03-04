@@ -54,6 +54,17 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "Login user by google token")
+    @PostMapping("/loginGoogle/{token}")
+    public ResponseEntity<?> loginUserGoogle(@PathVariable String token){
+        User user = userService.loginUserGoogle(token);
+        if (user != null) {
+            String jwtToken = JwtUtils.generateToken(user);
+            return ResponseEntity.ok(jwtToken);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+    }
 
     @Operation(summary = "Update user through json")
     @PostMapping("/updateUser/{userId}")

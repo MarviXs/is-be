@@ -13,6 +13,8 @@ public interface UserService {
 
     User loginUser(String name, String password);
 
+    User loginUserGoogle(String token);
+
     User updateUser(String userId, User changeUser);
 
     User deleteUser(String userId);
