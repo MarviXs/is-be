@@ -154,6 +154,10 @@ public class JobServiceImpl implements JobService {
         if (Objects.equals(currentCycle, maxCycles)) {
             throw new InvalidOperationException("Last cycle is under process, can't skip current one!");
         }
+        if(currentCycle == null) {
+            currentCycle = 0;
+        }
+        job.getStatus().setCurrentStep(0);
         job.getStatus().setCurrentCycle(currentCycle + 1);
         jobStatusService.upsertJobStatus(job.getStatus());
 
@@ -168,6 +172,9 @@ public class JobServiceImpl implements JobService {
 
         if (Objects.equals(currentStep, maxSteps)) {
             throw new InvalidOperationException("Last step is under process, can't skip current one!");
+        }
+        if(currentStep == null) {
+            currentStep = 0;
         }
         job.getStatus().setCurrentStep(currentStep + 1);
         jobStatusService.upsertJobStatus(job.getStatus());
