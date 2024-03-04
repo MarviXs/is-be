@@ -2,6 +2,8 @@ package sk.stuba.sdg.isbe.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import sk.stuba.sdg.isbe.domain.model.User;
 import sk.stuba.sdg.isbe.handlers.exceptions.EntityExistsException;
@@ -18,6 +20,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -122,6 +125,22 @@ public User loginUserGoogle(String token) {
         if (changeUser.getAuthorities() != null) {
             user.setAuthorities(changeUser.getAuthorities());
         }
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User setRoleUser(String userId, String role) {
+        User user = getUserById(userId);
+
+        if (userId == null || userId.isEmpty()) {
+            throw new InvalidEntityException("userId with changes is null!");
+        }
+
+        GrantedAuthority authority = new SimpleGrantedAuthority(role);
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(authority);
+        user.setAuthorities(authorities);
 
         return userRepository.save(user);
     }

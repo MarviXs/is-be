@@ -17,6 +17,8 @@ public interface UserService {
 
     User updateUser(String userId, User changeUser);
 
+    User setRoleUser(String userId, String role);
+
     User deleteUser(String userId);
 
     void validateUser(User user);
