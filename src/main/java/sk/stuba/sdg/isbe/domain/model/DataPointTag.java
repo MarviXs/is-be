@@ -66,6 +66,10 @@ public class DataPointTag {
         this.storedData = storedData;
     }
 
+    public void addStoredData(StoredData storedData) {
+        this.storedData.add(storedData);
+    }
+
     public Long getCreatedAt() {
         return createdAt;
     }
