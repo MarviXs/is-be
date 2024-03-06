@@ -22,6 +22,7 @@ public class WebConfig {
         http.csrf().disable().authorizeHttpRequests()
                 .requestMatchers("/api/user/create/**").permitAll()
                 .requestMatchers("/api/user/login/**").permitAll()
+                .requestMatchers("/api/user/loginGoogle/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated() // All other requests must be authenticated
