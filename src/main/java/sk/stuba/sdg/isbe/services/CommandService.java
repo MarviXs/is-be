@@ -14,13 +14,11 @@ public interface CommandService {
 
     Command getCommandById(String commandId);
 
-    Command getCommandByName(String name);
-
     Command deleteCommand(String commandId);
 
     Command updateCommand(String commandId, Command updateCommand);
 
-    Command addSubCommandToCommand(String commandId, String subCommandId);
+    Command addSubCommandToCommand(Command command, Command subCommand);
 
     List<Command> getCommandsByDeviceType(String deviceType, String sortBy, String sortDirection);
 

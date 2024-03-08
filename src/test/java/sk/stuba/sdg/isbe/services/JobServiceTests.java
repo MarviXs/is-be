@@ -9,9 +9,6 @@ import sk.stuba.sdg.isbe.domain.enums.JobStatusEnum;
 import sk.stuba.sdg.isbe.domain.model.Command;
 import sk.stuba.sdg.isbe.domain.model.Device;
 import sk.stuba.sdg.isbe.domain.model.Job;
-import sk.stuba.sdg.isbe.domain.model.Recipe;
-import sk.stuba.sdg.isbe.handlers.exceptions.InvalidEntityException;
-import sk.stuba.sdg.isbe.handlers.exceptions.InvalidOperationException;
 import sk.stuba.sdg.isbe.handlers.exceptions.NotFoundCustomException;
 import sk.stuba.sdg.isbe.repositories.*;
 
@@ -29,12 +26,6 @@ public class JobServiceTests {
 
     @Autowired
     protected JobRepository jobRepository;
-
-    @Autowired
-    private RecipeService recipeService;
-
-    @Autowired
-    private RecipeRepository recipeRepository;
 
     @Autowired
     private CommandService commandService;

@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sk.stuba.sdg.isbe.domain.enums.DeviceTypeEnum;
 import sk.stuba.sdg.isbe.domain.model.Command;
-import sk.stuba.sdg.isbe.domain.model.Recipe;
 import sk.stuba.sdg.isbe.handlers.exceptions.EntityExistsException;
 import sk.stuba.sdg.isbe.handlers.exceptions.InvalidEntityException;
 import sk.stuba.sdg.isbe.handlers.exceptions.InvalidOperationException;
@@ -32,13 +31,9 @@ public class CommandServiceImpl implements CommandService {
         if (command.getName() == null || command.getName().isEmpty()) {
             throw new InvalidEntityException("Name of the command is not valid!");
         }
-        if (commandWithNameExists(command.getName())) {
-            throw new EntityExistsException("Command with name: '" + command.getName() + "' already exists!");
-        }
         if (command.getDeviceType() == null) {
             throw new InvalidEntityException("Type of device for command must be set!");
         }
-
         command.setCreatedAt(Instant.now().toEpochMilli());
 
         return commandRepository.save(command);
@@ -76,15 +71,6 @@ public class CommandServiceImpl implements CommandService {
             throw new NotFoundCustomException("There are not any commands on page " + page + "!");
         }
         return commands;
-    }
-
-    @Override
-    public Command getCommandByName(String name) {
-        Optional<Command> optionalCommand = commandRepository.getCommandByNameAndDeactivated(name, false);
-        if (optionalCommand.isEmpty()) {
-            throw new NotFoundCustomException("Command with name: '" + name + "' not found!");
-        }
-        return optionalCommand.get();
     }
 
     @Override
@@ -135,16 +121,12 @@ public class CommandServiceImpl implements CommandService {
         }
 
         if (updateCommand.getName() != null) {
-            if (!command.getName().equals(updateCommand.getName()) && commandWithNameExists(updateCommand.getName())) {
-                throw new EntityExistsException("Command with name: '" + updateCommand.getName() + "' already exists!");
-            } else {
-                command.setName(updateCommand.getName());
-            }
+            command.setName(updateCommand.getName());
         }
         if (updateCommand.getParams() != null) {
             command.setParams(updateCommand.getParams());
         }
-        if (updateCommand.getDeviceType() != null) {
+        if (updateCommand.getDeviceType() != null && updateCommand.getDeviceType() != command.getDeviceType()) {
             if (checkIfCommandUsedAsSubCommand(command)) {
                 throw new InvalidOperationException("Remove this command from recipes to be able to change its type!");
             }
@@ -152,6 +134,7 @@ public class CommandServiceImpl implements CommandService {
         }
 
         if (updateCommand.getSubCommands() != null) {
+            command.setSubCommands(new ArrayList<>());
             command = addAllSubCommandsToCommand(command, updateCommand.getSubCommands());
         }
 
@@ -160,19 +143,16 @@ public class CommandServiceImpl implements CommandService {
 
     private Command addAllSubCommandsToCommand(Command comand, List<Command> subCommands) {
         for (Command subCommand : subCommands) {
-            comand = addSubCommandToCommand(comand.getId(), subCommand.getId());
+            comand = addSubCommandToCommand(comand, subCommand);
         }
         return comand;
     }
 
     @Override
-    public Command addSubCommandToCommand(String commandId, String subCommandId) {
-        if (Objects.equals(commandId, subCommandId)) {
+    public Command addSubCommandToCommand(Command command, Command subCommand) {
+        if (Objects.equals(command.getId(), subCommand.getId())) {
             throw new InvalidOperationException("Recipe can't be added as its own sub-recipe to prevent infinite loop!");
         }
-
-        Command command = getCommandById(commandId);
-        Command subCommand = getCommandById(subCommandId);
 
         if (command.getDeviceType() != subCommand.getDeviceType()) {
             throw new InvalidEntityException("Device types of the recipes do not match!"
@@ -182,7 +162,7 @@ public class CommandServiceImpl implements CommandService {
 
         if (subCommand.getSubCommands() != null) {
             List<String> subCommandIds = subCommand.getSubCommands().stream().map(Command::getId).toList();
-            if (subCommandIds.contains(commandId)) {
+            if (subCommandIds.contains(command.getId())) {
                 throw new InvalidOperationException("The list of sub-recipes of the given sub-recipe contains the recipe," +
                         " therefore it can't be used as sub-recipe of the recipe to prevent infinite loop.");
             }
@@ -205,9 +185,5 @@ public class CommandServiceImpl implements CommandService {
 
     private List<Command> getCommandsContainingSubCommand(Command subCommand) {
         return commandRepository.getCommandsBySubCommandsContainingAndDeactivated(subCommand, false);
-    }
-
-    private boolean commandWithNameExists(String name) {
-        return commandRepository.getCommandByNameAndDeactivated(name, false).isPresent();
     }
 }

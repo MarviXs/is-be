@@ -6,13 +6,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 import sk.stuba.sdg.isbe.domain.enums.DeviceTypeEnum;
 import sk.stuba.sdg.isbe.domain.model.Command;
-import sk.stuba.sdg.isbe.domain.model.Recipe;
 import sk.stuba.sdg.isbe.handlers.exceptions.EntityExistsException;
 import sk.stuba.sdg.isbe.handlers.exceptions.InvalidEntityException;
 import sk.stuba.sdg.isbe.handlers.exceptions.InvalidOperationException;
 import sk.stuba.sdg.isbe.handlers.exceptions.NotFoundCustomException;
 import sk.stuba.sdg.isbe.repositories.CommandRepository;
-import sk.stuba.sdg.isbe.repositories.RecipeRepository;
 
 import java.time.Instant;
 import java.util.List;
@@ -28,12 +26,6 @@ public class CommandServiceTests {
 
     @Autowired
     private CommandRepository commandRepository;
-
-    @Autowired
-    private RecipeService recipeService;
-
-    @Autowired
-    private RecipeRepository recipeRepository;
 
     private static final String NONE = "NONE";
 
@@ -72,36 +64,6 @@ public class CommandServiceTests {
         commandRepository.delete(existingCommand);
     }
 
-    @Test
-    void testDeleteCommand() {
-        Command command = new Command("command " + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32, false);
-        commandService.createCommand(command);
-        commandService.deleteCommand(command.getId());
-        Exception exception = assertThrows(NotFoundCustomException.class, () -> commandService.deleteCommand(command.getId()));
-        assertEquals("Command with ID: '" + command.getId() + "' was not found!", exception.getMessage());
-
-        commandService.createCommand(command);
-        Recipe recipe = new Recipe("recipeUsingCommand " + Instant.now().toEpochMilli(), DeviceTypeEnum.ESP32, false);
-        recipeService.createRecipe(recipe);
-        recipeService.addCommandToRecipe(recipe.getId(), command.getId());
-
-        Recipe recipe2 = new Recipe("recipeUsingCommand1 " + Instant.now().toEpochMilli(), DeviceTypeEnum.ESP32, false);
-        recipeService.createRecipe(recipe2);
-        recipeService.addCommandToRecipe(recipe2.getId(), command.getId());
-
-        exception = assertThrows(InvalidOperationException.class, () -> commandService.deleteCommand(command.getId()));
-        assertEquals("Command is used in Recipes: " + String.join(", ", recipe.getName(), recipe2.getName()) +
-                              ". Remove this command from recipes to be able to delete it!",
-                               exception.getMessage());
-
-        recipeService.removeCommandFromRecipe(recipe.getId(), command.getId(), 0);
-        recipeService.removeCommandFromRecipe(recipe2.getId(), command.getId(), 0);
-        commandService.deleteCommand(command.getId());
-
-        commandRepository.delete(command);
-        recipeRepository.delete(recipe);
-        recipeRepository.delete(recipe2);
-    }
 
     @Test
     void testGetCommand() {
@@ -114,19 +76,6 @@ public class CommandServiceTests {
         command.setDeactivated(false);
         commandService.createCommand(command);
         commandService.getCommandById(command.getId());
-        commandRepository.delete(command);
-    }
-
-    @Test
-    void testGetCommandByName() {
-        Command command = new Command("command " + Instant.now().toEpochMilli(), List.of(1.0,2.0,3.0), DeviceTypeEnum.ESP32, false);
-        commandService.createCommand(command);
-
-        String fakeName = command.getName() + " fake";
-        Exception exception = assertThrows(NotFoundCustomException.class, () -> commandService.getCommandByName(fakeName));
-        assertEquals("Command with name: '" + fakeName + "' not found!", exception.getMessage());
-
-        commandService.getCommandByName(command.getName());
         commandRepository.delete(command);
     }
 
