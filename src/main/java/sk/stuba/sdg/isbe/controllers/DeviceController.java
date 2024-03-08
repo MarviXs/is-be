@@ -6,13 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import sk.stuba.sdg.isbe.domain.model.Device;
-import sk.stuba.sdg.isbe.domain.model.Job;
-import sk.stuba.sdg.isbe.domain.model.JobStatus;
-import sk.stuba.sdg.isbe.domain.model.User;
+import sk.stuba.sdg.isbe.domain.model.*;
+import sk.stuba.sdg.isbe.domain.model.protofiles.*;
 import sk.stuba.sdg.isbe.services.DeviceService;
+import sk.stuba.sdg.isbe.services.JobService;
 import sk.stuba.sdg.isbe.services.JobStatusService;
+import sk.stuba.sdg.isbe.utilities.DevicebuffConverters;
+import sk.stuba.sdg.isbe.utilities.JobStatusbuffConverters;
 
+import java.lang.System;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +27,9 @@ public class DeviceController {
 
     @Autowired
     private JobStatusService jobStatusService;
+
+    @Autowired
+    private JobService jobService;
 
     @GetMapping
     public List<Device> getDevices(@AuthenticationPrincipal User user) {
@@ -94,11 +99,51 @@ public class DeviceController {
     }
 
     @Operation(summary = "Update JobStatus by device uid")
-    @PostMapping("/updateJobStatus/{deviceId}/{jobStatusId}")
-    public JobStatus updateJobStatus(@PathVariable String deviceId, @PathVariable String jobStatusId, @Valid @RequestBody JobStatus changeJobStatus) {
-        deviceService.getDeviceById(deviceId);
+    @PostMapping("/updateJobStatus/{deviceId}/{deviceKey}/{jobStatusId}")
+    public ResponseEntity<Device> updateJobStatus(@PathVariable String deviceId, @PathVariable String deviceKey, @PathVariable String jobStatusId, @Valid @RequestBody JobStatus changeJobStatus) {
 
-        return jobStatusService.updateJobStatus(jobStatusId, changeJobStatus, deviceId);
+        if (deviceId == null || deviceId.isEmpty()) {
+            return null;
+        }
+
+        if (deviceId != null && deviceService.getDeviceByIdAndKey(deviceId, deviceKey) != null) {
+            Device device = deviceService.getDeviceById(deviceId);
+
+            if(jobStatusService.updateJobStatus(jobStatusId, changeJobStatus, deviceId, deviceKey) != null) {
+
+                device.setDataPointTags(null);
+                device.setUser(null);
+                device.setSharedUsers(null);
+
+                return  ResponseEntity.ok(device);
+            }
+        }
+        return null;
+    }
+
+    @Operation(summary = "Update JobStatus by device uid in protobuf format")
+    @PostMapping("/updateJobStatusProto/{deviceId}/{deviceKey}/{jobId}")
+    public DeviceBuff.Device updateJobStatusProto(@PathVariable String deviceId, @PathVariable String deviceKey, @PathVariable String jobId, @Valid @RequestBody JobStatusBuff.JobStatus changeJobStatus) {
+
+        if (deviceId == null || deviceId.isEmpty()) {
+            return null;
+        }
+
+        Device device = deviceService.getDeviceByIdAndKey(deviceId, deviceKey);
+
+        if (device != null) {
+            JobStatus jobStatus = JobStatusbuffConverters.convertToDomainJobStatus(changeJobStatus);
+
+            if(jobStatusService.updateJobStatus(jobService.getJobById(jobId).getStatus().getUid(), jobStatus, deviceId, deviceKey) != null) {
+
+                device.setDataPointTags(null);
+                device.setUser(null);
+                device.setSharedUsers(null);
+
+                return DevicebuffConverters.toProtobufDevice(device);
+            }
+        }
+        return null;
     }
 
     @Operation(summary = "Add a shared user to a device")

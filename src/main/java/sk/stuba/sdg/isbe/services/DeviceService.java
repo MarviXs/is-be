@@ -23,6 +23,8 @@ public interface DeviceService {
 
     Device getDeviceById(String deviceId);
 
+    Device getDeviceByIdAndKey(String deviceId, String deviceKey);
+
     ResponseEntity<Device> deleteDevice(String deviceId);
 
     ResponseEntity<Job> addJobToDevice(String deviceId, String jodId);

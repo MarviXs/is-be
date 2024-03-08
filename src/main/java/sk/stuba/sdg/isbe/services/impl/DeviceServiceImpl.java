@@ -27,9 +27,6 @@ public class DeviceServiceImpl implements DeviceService {
     private static final String EMPTY_STRING = "";
     private static final String NONE = "NONE";
 
-    @Value("${sdg.http.auth-token-header-name}")
-    private String apiKey;
-
     @Autowired
     private DeviceRepository deviceRepository;
 
@@ -83,8 +80,8 @@ public class DeviceServiceImpl implements DeviceService {
         deviceRepository.save(device);
 
         device.setDataPointTags(null);
-        device.setInitApiKey(apiKey);
-
+        device.setUser(null);
+        device.setSharedUsers(null);
         return device;
     }
 
@@ -162,6 +159,15 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public Device getDeviceById(String deviceId){
         Optional<Device> optionalDevice = deviceRepository.getDeviceByUidAndDeactivated(deviceId, false);
+        if (optionalDevice.isEmpty()) {
+            throw new NotFoundCustomException("Device with ID: '" + deviceId + "' was not found!");
+        }
+        return optionalDevice.get();
+    }
+
+    @Override
+    public Device getDeviceByIdAndKey(String deviceId, String deviceKey){
+        Optional<Device> optionalDevice = deviceRepository.getDeviceByUidAndInitApiKey(deviceId, deviceKey);
         if (optionalDevice.isEmpty()) {
             throw new NotFoundCustomException("Device with ID: '" + deviceId + "' was not found!");
         }
