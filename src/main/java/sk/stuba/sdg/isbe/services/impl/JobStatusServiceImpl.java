@@ -77,7 +77,7 @@ public class JobStatusServiceImpl implements JobStatusService {
     }
 
     @Override
-    public JobStatus updateJobStatus(String jobStatusId, JobStatus changeJobStatus, String deviceId) {
+    public JobStatus updateJobStatus(String jobStatusId, JobStatus changeJobStatus, String deviceId, String deviceKey) {
         JobStatus jobStatus = getJobStatus(jobStatusId);
 
         if (changeJobStatus == null) {
@@ -93,18 +93,24 @@ public class JobStatusServiceImpl implements JobStatusService {
             changeJobsCurrentStatus(jobStatus.getJobId(), changeJobStatus.getCode());
         }
         if (changeJobStatus.getCurrentStep() != null) {
+            if (changeJobStatus.getCurrentStep() > jobStatus.getTotalSteps()) {
+                throw new InvalidEntityException("JobStatus current step overflow!");
+            }
             jobStatus.setCurrentStep(changeJobStatus.getCurrentStep());
         }
         if (changeJobStatus.getTotalSteps() != null) {
             jobStatus.setTotalSteps(changeJobStatus.getTotalSteps());
         }
         if (changeJobStatus.getCurrentCycle() != null) {
+            if (changeJobStatus.getCurrentCycle() > jobService.getJobById(jobStatus.getJobId()).getNoOfReps()) {
+                throw new InvalidEntityException("JobStatus current cycle overflow!");
+            }
             jobStatus.setCurrentCycle(changeJobStatus.getCurrentCycle());
         }
         if (changeJobStatus.getData() != null) {
             jobStatus.setData(changeJobStatus.getData());
 
-            if (deviceId != null) {
+            if (deviceId != null && deviceService.getDeviceByIdAndKey(deviceId, deviceKey) != null) {
                 List<DataPointTag> dataPointTags = deviceService.getDeviceById(deviceId).getDataPointTags();
                 List<StoredData> listStoredData = new ArrayList<>();
                 for (DataPoint dataPoint : jobStatus.getData()) {
@@ -123,6 +129,7 @@ public class JobStatusServiceImpl implements JobStatusService {
                 dataPointTagRepository.saveAll(dataPointTags);
                 DataStoredEvent dataStoredEvent = new DataStoredEvent(this, listStoredData, deviceId);
                 eventPublisher.publishEvent(dataStoredEvent);
+
             }
         }
 

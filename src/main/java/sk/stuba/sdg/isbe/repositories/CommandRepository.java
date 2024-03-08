@@ -13,13 +13,13 @@ import java.util.Optional;
 @Repository
 public interface CommandRepository extends MongoRepository<Command, String> {
 
-    Optional<Command> getCommandByNameAndDeactivated(String name, boolean deactivated);
-
     Optional<Command> getCommandByIdAndDeactivated(String id, boolean deactivated);
 
     List<Command> getCommandsByDeactivated(boolean deactivated, Sort sort);
 
     List<Command> getCommandsByDeactivated(boolean deactivated, Pageable pageable);
+
+    List<Command> getCommandsBySubCommandsContainingAndDeactivated(Command recipe, boolean deactivated);
 
     List<Command> getCommandsByDeviceTypeAndDeactivated(DeviceTypeEnum deviceType, boolean deactivated, Sort sort);
 

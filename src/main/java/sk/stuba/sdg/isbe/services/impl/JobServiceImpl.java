@@ -10,10 +10,10 @@ import sk.stuba.sdg.isbe.handlers.exceptions.InvalidOperationException;
 import sk.stuba.sdg.isbe.handlers.exceptions.NotFoundCustomException;
 import sk.stuba.sdg.isbe.repositories.JobRepository;
 import sk.stuba.sdg.isbe.repositories.JobStatusRepository;
+import sk.stuba.sdg.isbe.services.CommandService;
 import sk.stuba.sdg.isbe.services.DeviceService;
 import sk.stuba.sdg.isbe.services.JobService;
 import sk.stuba.sdg.isbe.services.JobStatusService;
-import sk.stuba.sdg.isbe.services.RecipeService;
 import sk.stuba.sdg.isbe.utilities.JobStatusUtils;
 import sk.stuba.sdg.isbe.utilities.SortingUtils;
 
@@ -30,7 +30,7 @@ public class JobServiceImpl implements JobService {
     private JobRepository jobRepository;
 
     @Autowired
-    private RecipeService recipeService;
+    private CommandService commandService;
 
     @Autowired
     private DeviceService deviceService;
@@ -43,9 +43,13 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Job runJobFromRecipe(String recipeId, String deviceId, int repetitions, List<Integer> scheduledDays, Integer scheduledHour, Integer scheduledMinute) {
-        Recipe recipe = recipeService.getRecipeById(recipeId);
+        Command recipe = commandService.getCommandById(recipeId);
         if (recipe.isDeactivated()) {
             throw new InvalidEntityException("Recipe is deactivated, can't create a job from it!");
+        }
+
+        if(!recipe.isRecipe()) {
+            throw new InvalidEntityException("Command is not a recipe!");
         }
 
         Job job = new Job(recipe.getName(), getCommandsFromRecipes(recipe));
@@ -122,7 +126,7 @@ public class JobServiceImpl implements JobService {
         return dataPoints;
     }
 
-    private List<Command> getCommandsFromRecipes(Recipe recipe) {
+    private List<Command> getCommandsFromRecipes(Command recipe) {
         List<Command> commands = new ArrayList<>();
         addCommandsRecursively(commands, recipe);
 
@@ -132,15 +136,18 @@ public class JobServiceImpl implements JobService {
         return commands;
     }
 
-    private void addCommandsRecursively(List<Command> commands, Recipe recipe) {
-        if (recipe.getCommands() != null && !recipe.getCommands().isEmpty()) {
-            commands.addAll(recipe.getCommands());
+    private void addCommandsRecursively(List<Command> commands, Command recipe) {
+        
+        //Is actual command with params
+        if(!recipe.isRecipe()) {
+            commands.add(recipe);
         }
-        if (recipe.getSubRecipes() == null) {
+
+        if (recipe.getSubCommands() == null) {
             return;
         }
 
-        for (Recipe subRecipe : recipe.getSubRecipes()) {
+        for (Command subRecipe : recipe.getSubCommands()) {
             addCommandsRecursively(commands, subRecipe);
         }
     }

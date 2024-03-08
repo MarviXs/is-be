@@ -14,6 +14,8 @@ public interface DeviceRepository extends MongoRepository<Device, String> {
 
     Optional<Device> getDeviceByUidAndDeactivated(String deviceId, boolean deactivated);
 
+    Optional<Device> getDeviceByUidAndInitApiKey(String deviceId, String deviceKey);
+
     @Query(value = "{ 'deactivated': ?0 }", fields = "{ 'dataPointTags' : 0 }")
     List<Device> getDevicesByDeactivatedWithoutDataPointTags(boolean deactivated);
 

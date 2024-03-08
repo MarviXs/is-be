@@ -2,6 +2,7 @@ package sk.stuba.sdg.isbe.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import sk.stuba.sdg.isbe.domain.enums.DeviceTypeEnum;
 
@@ -34,6 +35,17 @@ public class Command {
     private long createdAt;
 
     /**
+     * Indicates if the command is a recipe
+    */
+    private Boolean recipe;
+
+    /**
+     * Subcommands can now be part of a single command (acting like sub-recipes).
+    */
+    @DBRef
+    private List<Command> subCommands;
+
+    /**
      * Flag that is set when the user deletes a command. It provides the option to retrieve deleted commands from the database.
      */
     @JsonIgnore
@@ -42,10 +54,11 @@ public class Command {
 
     public Command() {}
 
-    public Command(String name, List<Double> params, DeviceTypeEnum deviceType) {
+    public Command(String name, List<Double> params, DeviceTypeEnum deviceType, Boolean recipe) {
         this.name = name;
-        this.params = params;
+        this.params = recipe ? null : params;
         this.deviceType = deviceType;
+        this.recipe = recipe;
     }
 
     public String getId() {
@@ -86,6 +99,24 @@ public class Command {
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public boolean isRecipe()
+    {
+        return recipe;
+    }
+
+    public void setRecipe(Boolean recipe)
+    {
+        this.recipe = recipe;
+    }
+
+    public List<Command> getSubCommands() {
+        return subCommands;
+    }
+
+    public void setSubCommands(List<Command> subCommands) {
+        this.subCommands = subCommands;
     }
 
     public boolean isDeactivated() {

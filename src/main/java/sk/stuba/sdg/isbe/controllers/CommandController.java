@@ -30,12 +30,6 @@ public class CommandController {
         return commandService.getCommandById(commandId);
     }
 
-    @Operation(summary = "Get command by name")
-    @GetMapping("getCommandByName/{commandName}")
-    public Command getCommandByName(@PathVariable String commandName) {
-        return commandService.getCommandByName(commandName);
-    }
-
     @Operation(summary = "Get all commands")
     @GetMapping("getAllCommands/{sortBy}/{sortDirection}")
     public List<Command> getAllCommands(@PathVariable @Parameter(description = "Unsorted -> NONE or NULL") String sortBy,

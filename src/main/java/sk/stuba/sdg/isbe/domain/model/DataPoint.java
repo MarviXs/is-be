@@ -4,6 +4,14 @@ public class DataPoint {
     private String tag;
     private Double value;
 
+    public DataPoint() {
+    }
+
+    public DataPoint(String tag, Double value) {
+        this.tag = tag;
+        this.value = value;
+    }
+
     public String getTag() {
         return tag;
     }
