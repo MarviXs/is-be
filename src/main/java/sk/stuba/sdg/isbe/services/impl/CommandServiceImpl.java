@@ -12,12 +12,13 @@ import sk.stuba.sdg.isbe.handlers.exceptions.InvalidOperationException;
 import sk.stuba.sdg.isbe.handlers.exceptions.NotFoundCustomException;
 import sk.stuba.sdg.isbe.repositories.CommandRepository;
 import sk.stuba.sdg.isbe.services.CommandService;
-import sk.stuba.sdg.isbe.services.RecipeService;
 import sk.stuba.sdg.isbe.utilities.DeviceTypeUtils;
 import sk.stuba.sdg.isbe.utilities.SortingUtils;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -25,9 +26,6 @@ public class CommandServiceImpl implements CommandService {
 
     @Autowired
     private CommandRepository commandRepository;
-
-    @Autowired
-    private RecipeService recipeService;
 
     @Override
     public Command createCommand(Command command) {
@@ -119,7 +117,10 @@ public class CommandServiceImpl implements CommandService {
     @Override
     public Command deleteCommand(String commandId) {
         Command command = getCommandById(commandId);
-        checkCommandUsedByRecipe(command, "Remove this command from recipes to be able to delete it!");
+
+        if (checkIfCommandUsedAsSubCommand(command)) {
+            throw new InvalidOperationException("Remove this command from recipes to be able to delete it!");
+        }
 
         command.setDeactivated(true);
         return commandRepository.save(command);
@@ -144,21 +145,66 @@ public class CommandServiceImpl implements CommandService {
             command.setParams(updateCommand.getParams());
         }
         if (updateCommand.getDeviceType() != null) {
-            checkCommandUsedByRecipe(command, "Remove this command from recipes to be able to change its type!");
+            if (checkIfCommandUsedAsSubCommand(command)) {
+                throw new InvalidOperationException("Remove this command from recipes to be able to change its type!");
+            }
             command.setDeviceType(updateCommand.getDeviceType());
+        }
+
+        if (updateCommand.getSubCommands() != null) {
+            command = addAllSubCommandsToCommand(command, updateCommand.getSubCommands());
         }
 
         return commandRepository.save(command);
     }
 
-    private void checkCommandUsedByRecipe(Command command, String additionalMsg) {
-        List<Recipe> recipesUsingCommand = recipeService.getRecipesContainingCommand(command);
-
-        if (!recipesUsingCommand.isEmpty()) {
-            List<String> recipeNames = recipesUsingCommand.stream().map(Recipe::getName).toList();
-            throw new InvalidOperationException("Command is used in Recipes: " + String.join(", ", recipeNames)
-                    + "." + (additionalMsg != null && !additionalMsg.isEmpty() ? " " + additionalMsg : ""));
+    private Command addAllSubCommandsToCommand(Command comand, List<Command> subCommands) {
+        for (Command subCommand : subCommands) {
+            comand = addSubCommandToCommand(comand.getId(), subCommand.getId());
         }
+        return comand;
+    }
+
+    @Override
+    public Command addSubCommandToCommand(String commandId, String subCommandId) {
+        if (Objects.equals(commandId, subCommandId)) {
+            throw new InvalidOperationException("Recipe can't be added as its own sub-recipe to prevent infinite loop!");
+        }
+
+        Command command = getCommandById(commandId);
+        Command subCommand = getCommandById(subCommandId);
+
+        if (command.getDeviceType() != subCommand.getDeviceType()) {
+            throw new InvalidEntityException("Device types of the recipes do not match!"
+            + " Recipe's device type: " + command.getDeviceType()
+            + ", Sub-recipe's device type: " + subCommand.getDeviceType());
+        }
+
+        if (subCommand.getSubCommands() != null) {
+            List<String> subCommandIds = subCommand.getSubCommands().stream().map(Command::getId).toList();
+            if (subCommandIds.contains(commandId)) {
+                throw new InvalidOperationException("The list of sub-recipes of the given sub-recipe contains the recipe," +
+                        " therefore it can't be used as sub-recipe of the recipe to prevent infinite loop.");
+            }
+        }
+
+        if (command.getSubCommands() == null) {
+            command.setSubCommands(new ArrayList<>());
+        }
+
+        command.getSubCommands().add(subCommand);
+        return commandRepository.save(command);
+    }
+
+
+    private boolean checkIfCommandUsedAsSubCommand(Command command) {
+        List<Command> commandsContainingSubCommand = getCommandsContainingSubCommand(command);
+
+        return !commandsContainingSubCommand.isEmpty();
+    }
+
+    private List<Command> getCommandsContainingSubCommand(Command subCommand) {
+        return commandRepository.getCommandsBySubCommandsContainingAndDeactivated(subCommand, false);
     }
 
     private boolean commandWithNameExists(String name) {

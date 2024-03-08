@@ -20,6 +20,8 @@ public interface CommandService {
 
     Command updateCommand(String commandId, Command updateCommand);
 
+    Command addSubCommandToCommand(String commandId, String subCommandId);
+
     List<Command> getCommandsByDeviceType(String deviceType, String sortBy, String sortDirection);
 
     List<Command> getCommandsByDeviceTypePageable(String deviceType, int page, int pageSize, String sortBy, String sortDirection);
