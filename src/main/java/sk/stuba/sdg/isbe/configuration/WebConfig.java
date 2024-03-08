@@ -23,6 +23,9 @@ public class WebConfig {
                 .requestMatchers("/api/user/login/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
+                .requestMatchers("/api/device/initializeDevice/**").permitAll()
+                .requestMatchers("/api/device/updateJobStatus/**").permitAll()
+                .requestMatchers("/api/device/updateJobStatusProto/**").permitAll()
                 .anyRequest().authenticated() // All other requests must be authenticated
                 .and()
                 .sessionManagement()

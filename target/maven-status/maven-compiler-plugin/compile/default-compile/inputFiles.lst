@@ -10,6 +10,8 @@
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/domain/model/StoredResolvedScenario.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/services/impl/LastStoredDataServiceImpl.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/controllers/JobController.java
+/home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/utilities/DevicebuffConverters.java
+/home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/domain/model/protofiles/DeviceBuff.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/utilities/JwtUtils.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/services/JobService.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/controllers/ModuleController.java
@@ -60,6 +62,7 @@
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/services/impl/JobServiceImpl.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/handlers/exceptions/InvalidOperationException.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/controllers/JobStatusController.java
+/home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/utilities/JobStatusbuffConverters.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/services/impl/CommandServiceImpl.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/repositories/UserRepository.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/services/impl/JobStatusServiceImpl.java
@@ -78,6 +81,7 @@
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/controllers/CommandController.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/domain/model/Recipe.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/configuration/JwtAuthFilter.java
+/home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/domain/model/protofiles/JobStatusBuff.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/controllers/UserController.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/repositories/CollectionRepository.java
 /home/michal/Documents/school/is-be/src/main/java/sk/stuba/sdg/isbe/domain/enums/JobStatusEnum.java
