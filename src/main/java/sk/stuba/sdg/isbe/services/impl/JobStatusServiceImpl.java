@@ -14,6 +14,7 @@ import sk.stuba.sdg.isbe.events.DataStoredEvent;
 import sk.stuba.sdg.isbe.handlers.exceptions.InvalidEntityException;
 import sk.stuba.sdg.isbe.handlers.exceptions.NotFoundCustomException;
 import sk.stuba.sdg.isbe.repositories.DataPointTagRepository;
+import sk.stuba.sdg.isbe.repositories.DeviceRepository;
 import sk.stuba.sdg.isbe.repositories.JobRepository;
 import sk.stuba.sdg.isbe.repositories.JobStatusRepository;
 import sk.stuba.sdg.isbe.repositories.StoredDataRepository;
@@ -24,6 +25,9 @@ import sk.stuba.sdg.isbe.services.StoredDataService;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +44,13 @@ public class JobStatusServiceImpl implements JobStatusService {
     private DeviceService deviceService;
 
     @Autowired
-    private StoredDataRepository storedDataRepository;
-
-    @Autowired
     private ApplicationEventPublisher eventPublisher;
 
     @Autowired
     private JobRepository jobRepository;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     @Autowired
     private JobService jobService;
@@ -61,7 +65,7 @@ public class JobStatusServiceImpl implements JobStatusService {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public JobStatus createJobStatus(JobStatus jobStatus){
+    public JobStatus createJobStatus(JobStatus jobStatus) {
         jobStatus.setCreatedAt(Instant.now().toEpochMilli());
         jobStatus.setLastUpdated(LocalDateTime.now());
         return upsertJobStatus(jobStatus);
@@ -114,7 +118,8 @@ public class JobStatusServiceImpl implements JobStatusService {
                 List<DataPointTag> dataPointTags = deviceService.getDeviceById(deviceId).getDataPointTags();
                 List<StoredData> listStoredData = new ArrayList<>();
                 for (DataPoint dataPoint : jobStatus.getData()) {
-                    DataPointTag dataPointTag = dataPointTags.stream().filter(data -> Objects.equals(data.getTag(), dataPoint.getTag())).findAny()
+                    DataPointTag dataPointTag = dataPointTags.stream()
+                            .filter(data -> Objects.equals(data.getTag(), dataPoint.getTag())).findAny()
                             .orElse(null);
                     StoredData storedData = new StoredData();
                     storedData.setDataPointTagId(dataPointTag.getUid());
@@ -129,11 +134,18 @@ public class JobStatusServiceImpl implements JobStatusService {
                 dataPointTagRepository.saveAll(dataPointTags);
                 DataStoredEvent dataStoredEvent = new DataStoredEvent(this, listStoredData, deviceId);
                 eventPublisher.publishEvent(dataStoredEvent);
-
             }
         }
 
         jobStatus.setLastUpdated(LocalDateTime.now());
+
+        Device device = deviceService.getDeviceById(deviceId);
+        if (device != null) {
+            device.setLastContact(LocalDateTime.now(ZoneOffset.UTC));
+            device.setLastJobStatus(changeJobStatus.getCode());
+            deviceRepository.save(device);
+        }
+
         return upsertJobStatus(jobStatus);
     }
 
@@ -168,7 +180,8 @@ public class JobStatusServiceImpl implements JobStatusService {
             // if no matching document found, insert a new document
             mongoTemplate.insert(jobStatus);
         } else {
-            // if a matching document is found, update the scenario object with the latest data
+            // if a matching document is found, update the scenario object with the latest
+            // data
             jobStatus = mongoTemplate.findOne(query, JobStatus.class);
         }
 

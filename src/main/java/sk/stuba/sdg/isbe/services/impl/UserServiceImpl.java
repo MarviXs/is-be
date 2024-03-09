@@ -73,7 +73,6 @@ public User loginUserGoogle(String token) {
             .setAudience(Collections.singletonList(googleClientId))
             .build();
     try {
-        System.out.println(googleClientId);
         GoogleIdToken idToken = verifier.verify(token);
 
         if (idToken != null) {
