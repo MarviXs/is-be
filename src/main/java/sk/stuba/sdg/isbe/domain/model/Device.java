@@ -5,6 +5,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import sk.stuba.sdg.isbe.domain.enums.DeviceTypeEnum;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,7 @@ public class Device {
     @DBRef
     private List<DataPointTag> dataPointTags = new ArrayList<>();
     private Long responseTime = 10L;
+    private LocalDateTime lastContact;
     private Long addTime;
     private Long initExpireTime;
     private String initApiKey;
@@ -157,6 +161,14 @@ public class Device {
 
     public void setDeactivated(boolean deactivated) {
         this.deactivated = deactivated;
+    }
+    
+    public LocalDateTime getLastContact() {
+        return lastContact;
+    }
+
+    public void setLastContact(LocalDateTime lastContact) {
+        this.lastContact = lastContact;
     }
 
     @Override

@@ -48,10 +48,6 @@ public class JobServiceImpl implements JobService {
             throw new InvalidEntityException("Recipe is deactivated, can't create a job from it!");
         }
 
-        if(!recipe.isRecipe()) {
-            throw new InvalidEntityException("Command is not a recipe!");
-        }
-
         Job job = new Job(recipe.getName(), getCommandsFromRecipes(recipe));
         return runJob(job, deviceId, repetitions, scheduledDays, scheduledHour, scheduledMinute);
     }
