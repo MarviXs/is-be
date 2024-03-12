@@ -19,6 +19,7 @@ import sk.stuba.sdg.isbe.services.JobService;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -300,8 +301,7 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public String getDeviceStatus(String deviceId) {
         Device device = getDeviceById(deviceId);
-        List<Job> runningJobs = jobService.getAllJobsByStatus(deviceId, JobStatusEnum.JOB_PROCESSING.name(), NONE, NONE);
-        LocalDateTime lastUpdated = runningJobs.get(0).getStatus().getLastUpdated();
+        LocalDateTime lastUpdated = LocalDateTime.ofInstant(Instant.ofEpochMilli(device.getLastResponse()), ZoneId.systemDefault());
 
         if (LocalDateTime.now().minusSeconds(device.getResponseTime()).isAfter(lastUpdated)) {
             throw new DeviceErrorException("Device job last updated at: " + lastUpdated.toString().replace("T", " - ")

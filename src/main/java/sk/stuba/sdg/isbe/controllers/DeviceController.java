@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sk.stuba.sdg.isbe.domain.model.*;
 import sk.stuba.sdg.isbe.domain.model.protofiles.*;
+import sk.stuba.sdg.isbe.repositories.DeviceRepository;
 import sk.stuba.sdg.isbe.services.DeviceService;
 import sk.stuba.sdg.isbe.services.JobService;
 import sk.stuba.sdg.isbe.services.JobStatusService;
@@ -15,8 +16,10 @@ import sk.stuba.sdg.isbe.utilities.DevicebuffConverters;
 import sk.stuba.sdg.isbe.utilities.JobStatusbuffConverters;
 
 import java.lang.System;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("api/device")
@@ -24,6 +27,9 @@ public class DeviceController {
 
     @Autowired
     private DeviceService deviceService;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     @Autowired
     private JobStatusService jobStatusService;
@@ -136,14 +142,20 @@ public class DeviceController {
         JobStatus jobStatus = JobStatusbuffConverters.convertToDomainJobStatus(changeJobStatus);
         Device device = deviceService.getDeviceByIdAndKey(deviceId, jobStatus.getDeviceKey());
 
+        device.setLastResponse(Instant.now().toEpochMilli());
+        deviceRepository.save(device);
+
+        System.out.println(jobId);
         if (device != null) {
+            device.setDataPointTags(null);
+            device.setUser(null);
+            device.setSharedUsers(null);
+
+            if (Objects.equals(jobId, "0")) {
+                return DevicebuffConverters.toProtobufDevice(device);
+            }
 
             if(jobStatusService.updateJobStatus(jobService.getJobById(jobId).getStatus().getUid(), jobStatus, deviceId, jobStatus.getDeviceKey()) != null) {
-
-                device.setDataPointTags(null);
-                device.setUser(null);
-                device.setSharedUsers(null);
-
                 return DevicebuffConverters.toProtobufDevice(device);
             }
         }
