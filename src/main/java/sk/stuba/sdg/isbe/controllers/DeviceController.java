@@ -122,19 +122,23 @@ public class DeviceController {
     }
 
     @Operation(summary = "Update JobStatus by device uid in protobuf format")
-    @PostMapping("/updateJobStatusProto/{deviceId}/{deviceKey}/{jobId}")
-    public DeviceBuff.Device updateJobStatusProto(@PathVariable String deviceId, @PathVariable String deviceKey, @PathVariable String jobId, @Valid @RequestBody JobStatusBuff.JobStatus changeJobStatus) {
+    @PostMapping("/updateJobStatusProto/{deviceId}/{jobId}")
+    public DeviceBuff.Device updateJobStatusProto(@PathVariable String deviceId, @PathVariable String jobId, @Valid @RequestBody JobStatusBuff.JobStatus changeJobStatus) {
 
         if (deviceId == null || deviceId.isEmpty()) {
             return null;
         }
 
-        Device device = deviceService.getDeviceByIdAndKey(deviceId, deviceKey);
+        if (changeJobStatus == null) {
+            return null;
+        }
+
+        JobStatus jobStatus = JobStatusbuffConverters.convertToDomainJobStatus(changeJobStatus);
+        Device device = deviceService.getDeviceByIdAndKey(deviceId, jobStatus.getDeviceKey());
 
         if (device != null) {
-            JobStatus jobStatus = JobStatusbuffConverters.convertToDomainJobStatus(changeJobStatus);
 
-            if(jobStatusService.updateJobStatus(jobService.getJobById(jobId).getStatus().getUid(), jobStatus, deviceId, deviceKey) != null) {
+            if(jobStatusService.updateJobStatus(jobService.getJobById(jobId).getStatus().getUid(), jobStatus, deviceId, jobStatus.getDeviceKey()) != null) {
 
                 device.setDataPointTags(null);
                 device.setUser(null);

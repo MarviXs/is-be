@@ -20,9 +20,9 @@ public final class DeviceBuff {
   public enum DeviceTypeEnum
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
-     * <code>NONE = 0;</code>
+     * <code>UNDEVICETYPE = 0;</code>
      */
-    NONE(0),
+    UNDEVICETYPE(0),
     /**
      * <code>ESP32 = 1;</code>
      */
@@ -35,9 +35,9 @@ public final class DeviceBuff {
     ;
 
     /**
-     * <code>NONE = 0;</code>
+     * <code>UNDEVICETYPE = 0;</code>
      */
-    public static final int NONE_VALUE = 0;
+    public static final int UNDEVICETYPE_VALUE = 0;
     /**
      * <code>ESP32 = 1;</code>
      */
@@ -72,7 +72,7 @@ public final class DeviceBuff {
      */
     public static DeviceTypeEnum forNumber(int value) {
       switch (value) {
-        case 0: return NONE;
+        case 0: return UNDEVICETYPE;
         case 1: return ESP32;
         case 2: return SDG_CUBE;
         default: return null;
@@ -2673,7 +2673,7 @@ public final class DeviceBuff {
       if (noOfReps_ != 0) {
         output.writeInt32(5, noOfReps_);
       }
-      if (currentStatus_ != sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.JobStatusEnum.UNSPECIFIED.getNumber()) {
+      if (currentStatus_ != sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.JobStatusEnum.UNJOBSTATUS.getNumber()) {
         output.writeEnum(6, currentStatus_);
       }
       for (int i = 0; i < commands_.size(); i++) {
@@ -2736,7 +2736,7 @@ public final class DeviceBuff {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(5, noOfReps_);
       }
-      if (currentStatus_ != sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.JobStatusEnum.UNSPECIFIED.getNumber()) {
+      if (currentStatus_ != sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.JobStatusEnum.UNJOBSTATUS.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(6, currentStatus_);
       }
@@ -5171,7 +5171,7 @@ public final class DeviceBuff {
       for (int i = 0; i < params_.size(); i++) {
         output.writeDoubleNoTag(params_.getDouble(i));
       }
-      if (deviceType_ != sk.stuba.sdg.isbe.domain.model.protofiles.DeviceBuff.DeviceTypeEnum.NONE.getNumber()) {
+      if (deviceType_ != sk.stuba.sdg.isbe.domain.model.protofiles.DeviceBuff.DeviceTypeEnum.UNDEVICETYPE.getNumber()) {
         output.writeEnum(4, deviceType_);
       }
       if (createdAt_ != 0L) {
@@ -5206,7 +5206,7 @@ public final class DeviceBuff {
         }
         paramsMemoizedSerializedSize = dataSize;
       }
-      if (deviceType_ != sk.stuba.sdg.isbe.domain.model.protofiles.DeviceBuff.DeviceTypeEnum.NONE.getNumber()) {
+      if (deviceType_ != sk.stuba.sdg.isbe.domain.model.protofiles.DeviceBuff.DeviceTypeEnum.UNDEVICETYPE.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(4, deviceType_);
       }
@@ -6058,9 +6058,9 @@ public final class DeviceBuff {
       "\030\002 \001(\t\022\016\n\006params\030\003 \003(\001\022M\n\ndeviceType\030\004 \001" +
       "(\01629.sk.stuba.sdg.isbe.domain.model.prot" +
       "ofiles.DeviceTypeEnum\022\021\n\tcreatedAt\030\005 \001(\003" +
-      "\022\023\n\013deactivated\030\006 \001(\010*3\n\016DeviceTypeEnum\022" +
-      "\010\n\004NONE\020\000\022\t\n\005ESP32\020\001\022\014\n\010SDG_CUBE\020\002b\006prot" +
-      "o3"
+      "\022\023\n\013deactivated\030\006 \001(\010*;\n\016DeviceTypeEnum\022" +
+      "\020\n\014UNDEVICETYPE\020\000\022\t\n\005ESP32\020\001\022\014\n\010SDG_CUBE" +
+      "\020\002b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
