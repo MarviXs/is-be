@@ -30,7 +30,7 @@ public class Device {
     @DBRef
     private List<DataPointTag> dataPointTags = new ArrayList<>();
     private Long responseTime = 10L;
-    private LocalDateTime lastContact;
+    private Long lastResponse;
     private Long addTime;
     private Long initExpireTime;
     private String initApiKey;
@@ -130,6 +130,14 @@ public class Device {
 
     public void setResponseTime(Long responseTime) {
         this.responseTime = responseTime;
+    }
+
+    public Long getLastResponse() {
+        return lastResponse;
+    }
+
+    public void setLastResponse(Long lastResponse) {
+        this.lastResponse = lastResponse;
     }
 
     public Long getAddTime() {

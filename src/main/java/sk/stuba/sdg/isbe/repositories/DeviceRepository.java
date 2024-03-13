@@ -23,4 +23,6 @@ public interface DeviceRepository extends MongoRepository<Device, String> {
 
     @Query(value = "{ 'user.uid': ?0, 'deactivated': ?1 }", fields = "{ 'dataPointTags' : 0 }")
     List<Device> getDevicesByUserDeactivatedWithoutDataPointTags(String userId, boolean deactivated);
+
+    Device getDeviceByUid(String deviceId);
 }

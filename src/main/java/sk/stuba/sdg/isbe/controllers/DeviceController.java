@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sk.stuba.sdg.isbe.domain.model.*;
 import sk.stuba.sdg.isbe.domain.model.protofiles.*;
+import sk.stuba.sdg.isbe.repositories.DeviceRepository;
 import sk.stuba.sdg.isbe.services.DeviceService;
 import sk.stuba.sdg.isbe.services.JobService;
 import sk.stuba.sdg.isbe.services.JobStatusService;
@@ -16,9 +17,9 @@ import sk.stuba.sdg.isbe.utilities.JobStatusbuffConverters;
 
 import java.lang.System;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("api/device")
@@ -26,6 +27,9 @@ public class DeviceController {
 
     @Autowired
     private DeviceService deviceService;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     @Autowired
     private JobStatusService jobStatusService;
@@ -124,24 +128,34 @@ public class DeviceController {
     }
 
     @Operation(summary = "Update JobStatus by device uid in protobuf format")
-    @PostMapping("/updateJobStatusProto/{deviceId}/{deviceKey}/{jobId}")
-    public DeviceBuff.Device updateJobStatusProto(@PathVariable String deviceId, @PathVariable String deviceKey, @PathVariable String jobId, @Valid @RequestBody JobStatusBuff.JobStatus changeJobStatus) {
+    @PostMapping("/updateJobStatusProto/{deviceId}/{jobId}")
+    public DeviceBuff.Device updateJobStatusProto(@PathVariable String deviceId, @PathVariable String jobId, @Valid @RequestBody JobStatusBuff.JobStatus changeJobStatus) {
 
         if (deviceId == null || deviceId.isEmpty()) {
             return null;
         }
 
-        Device device = deviceService.getDeviceByIdAndKey(deviceId, deviceKey);
+        if (changeJobStatus == null) {
+            return null;
+        }
 
+        JobStatus jobStatus = JobStatusbuffConverters.convertToDomainJobStatus(changeJobStatus);
+        Device device = deviceService.getDeviceByIdAndKey(deviceId, jobStatus.getDeviceKey());
+
+        device.setLastResponse(Instant.now().toEpochMilli());
+        deviceRepository.save(device);
+
+        System.out.println(jobId);
         if (device != null) {
-            JobStatus jobStatus = JobStatusbuffConverters.convertToDomainJobStatus(changeJobStatus);
+            device.setDataPointTags(null);
+            device.setUser(null);
+            device.setSharedUsers(null);
 
-            if(jobStatusService.updateJobStatus(jobService.getJobById(jobId).getStatus().getUid(), jobStatus, deviceId, deviceKey) != null) {
+            if (Objects.equals(jobId, "0")) {
+                return DevicebuffConverters.toProtobufDevice(device);
+            }
 
-                device.setDataPointTags(null);
-                device.setUser(null);
-                device.setSharedUsers(null);
-
+            if(jobStatusService.updateJobStatus(jobService.getJobById(jobId).getStatus().getUid(), jobStatus, deviceId, jobStatus.getDeviceKey()) != null) {
                 return DevicebuffConverters.toProtobufDevice(device);
             }
         }

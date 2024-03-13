@@ -30,7 +30,7 @@ public class StoredDataServiceImpl implements StoredDataService {
             throw new InvalidEntityException("Data Point Save has no name or unit set!");
         }
 
-        storedData.setMeasureAdd(Instant.now().toEpochMilli());
+        storedData.setMeasureAt(Instant.now().toEpochMilli());
         return upsertStoredData(storedData);
     }
 
@@ -85,7 +85,8 @@ public class StoredDataServiceImpl implements StoredDataService {
         Update update = new Update()
                 .set("dataPointTagId", storedData.getDataPointTagId())
                 .set("value", storedData.getValue())
-                .set("measureAdd", storedData.getMeasureAdd())
+                .set("measureAt", storedData.getMeasureAt())
+                .set("measureAtDevice", storedData.getMeasureAtDevice())
                 .set("deactivated", storedData.isDeactivated())
                 .set("deviceId", storedData.getDeviceId())
                 .set("tag", storedData.getTag());

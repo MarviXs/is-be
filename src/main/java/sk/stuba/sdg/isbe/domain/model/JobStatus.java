@@ -1,5 +1,6 @@
 package sk.stuba.sdg.isbe.domain.model;
 
+import org.bson.json.StrictCharacterStreamJsonWriter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import sk.stuba.sdg.isbe.domain.enums.JobStatusEnum;
@@ -25,6 +26,7 @@ public class JobStatus {
     private List<DataPoint> data;
     private Long createdAt;
     private LocalDateTime lastUpdated;
+    private String deviceKey;
 
     public String getUid() {
         return uid;
@@ -104,5 +106,13 @@ public class JobStatus {
 
     public void setLastUpdated(LocalDateTime lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public String getDeviceKey() {
+        return deviceKey;
+    }
+
+    public void setDeviceKey(String deviceKey) {
+        this.deviceKey = deviceKey;
     }
 }
