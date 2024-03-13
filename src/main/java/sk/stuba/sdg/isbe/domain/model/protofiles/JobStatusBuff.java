@@ -24,9 +24,9 @@ public final class JobStatusBuff {
   public enum JobStatusEnum
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
-     * <code>UNSPECIFIED = 0;</code>
+     * <code>UNJOBSTATUS = 0;</code>
      */
-    UNSPECIFIED(0),
+    UNJOBSTATUS(0),
     /**
      * <pre>
      * "no in retCode" indicates this might not be used in return codes, but still defined for completeness.
@@ -91,9 +91,9 @@ public final class JobStatusBuff {
     ;
 
     /**
-     * <code>UNSPECIFIED = 0;</code>
+     * <code>UNJOBSTATUS = 0;</code>
      */
-    public static final int UNSPECIFIED_VALUE = 0;
+    public static final int UNJOBSTATUS_VALUE = 0;
     /**
      * <pre>
      * "no in retCode" indicates this might not be used in return codes, but still defined for completeness.
@@ -180,7 +180,7 @@ public final class JobStatusBuff {
      */
     public static JobStatusEnum forNumber(int value) {
       switch (value) {
-        case 0: return UNSPECIFIED;
+        case 0: return UNJOBSTATUS;
         case 1: return JOB_FREE;
         case 2: return JOB_IDLE;
         case 3: return JOB_PENDING;
@@ -271,6 +271,12 @@ public final class JobStatusBuff {
      * @return The value.
      */
     double getValue();
+
+    /**
+     * <code>double measureAt = 3;</code>
+     * @return The measureAt.
+     */
+    double getMeasureAt();
   }
   /**
    * <pre>
@@ -331,6 +337,11 @@ public final class JobStatusBuff {
             case 17: {
 
               value_ = input.readDouble();
+              break;
+            }
+            case 25: {
+
+              measureAt_ = input.readDouble();
               break;
             }
             default: {
@@ -418,6 +429,17 @@ public final class JobStatusBuff {
       return value_;
     }
 
+    public static final int MEASUREAT_FIELD_NUMBER = 3;
+    private double measureAt_;
+    /**
+     * <code>double measureAt = 3;</code>
+     * @return The measureAt.
+     */
+    @java.lang.Override
+    public double getMeasureAt() {
+      return measureAt_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -438,6 +460,9 @@ public final class JobStatusBuff {
       if (value_ != 0D) {
         output.writeDouble(2, value_);
       }
+      if (measureAt_ != 0D) {
+        output.writeDouble(3, measureAt_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -453,6 +478,10 @@ public final class JobStatusBuff {
       if (value_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
           .computeDoubleSize(2, value_);
+      }
+      if (measureAt_ != 0D) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(3, measureAt_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -474,6 +503,9 @@ public final class JobStatusBuff {
       if (java.lang.Double.doubleToLongBits(getValue())
           != java.lang.Double.doubleToLongBits(
               other.getValue())) return false;
+      if (java.lang.Double.doubleToLongBits(getMeasureAt())
+          != java.lang.Double.doubleToLongBits(
+              other.getMeasureAt())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -490,6 +522,9 @@ public final class JobStatusBuff {
       hash = (37 * hash) + VALUE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getValue()));
+      hash = (37 * hash) + MEASUREAT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getMeasureAt()));
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -631,6 +666,8 @@ public final class JobStatusBuff {
 
         value_ = 0D;
 
+        measureAt_ = 0D;
+
         return this;
       }
 
@@ -659,6 +696,7 @@ public final class JobStatusBuff {
         sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.DataPoint result = new sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.DataPoint(this);
         result.tag_ = tag_;
         result.value_ = value_;
+        result.measureAt_ = measureAt_;
         onBuilt();
         return result;
       }
@@ -713,6 +751,9 @@ public final class JobStatusBuff {
         }
         if (other.getValue() != 0D) {
           setValue(other.getValue());
+        }
+        if (other.getMeasureAt() != 0D) {
+          setMeasureAt(other.getMeasureAt());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -858,6 +899,37 @@ public final class JobStatusBuff {
       public Builder clearValue() {
         
         value_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      private double measureAt_ ;
+      /**
+       * <code>double measureAt = 3;</code>
+       * @return The measureAt.
+       */
+      @java.lang.Override
+      public double getMeasureAt() {
+        return measureAt_;
+      }
+      /**
+       * <code>double measureAt = 3;</code>
+       * @param value The measureAt to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMeasureAt(double value) {
+        
+        measureAt_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>double measureAt = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMeasureAt() {
+        
+        measureAt_ = 0D;
         onChanged();
         return this;
       }
@@ -1052,6 +1124,18 @@ public final class JobStatusBuff {
      * <code>.google.protobuf.Timestamp lastUpdated = 10;</code>
      */
     com.google.protobuf.TimestampOrBuilder getLastUpdatedOrBuilder();
+
+    /**
+     * <code>string deviceKey = 11;</code>
+     * @return The deviceKey.
+     */
+    java.lang.String getDeviceKey();
+    /**
+     * <code>string deviceKey = 11;</code>
+     * @return The bytes for deviceKey.
+     */
+    com.google.protobuf.ByteString
+        getDeviceKeyBytes();
   }
   /**
    * <pre>
@@ -1075,6 +1159,7 @@ public final class JobStatusBuff {
       retCode_ = 0;
       code_ = 0;
       data_ = java.util.Collections.emptyList();
+      deviceKey_ = "";
     }
 
     @java.lang.Override
@@ -1167,6 +1252,12 @@ public final class JobStatusBuff {
                 lastUpdated_ = subBuilder.buildPartial();
               }
 
+              break;
+            }
+            case 90: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              deviceKey_ = s;
               break;
             }
             default: {
@@ -1449,6 +1540,44 @@ public final class JobStatusBuff {
       return getLastUpdated();
     }
 
+    public static final int DEVICEKEY_FIELD_NUMBER = 11;
+    private volatile java.lang.Object deviceKey_;
+    /**
+     * <code>string deviceKey = 11;</code>
+     * @return The deviceKey.
+     */
+    @java.lang.Override
+    public java.lang.String getDeviceKey() {
+      java.lang.Object ref = deviceKey_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        deviceKey_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string deviceKey = 11;</code>
+     * @return The bytes for deviceKey.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getDeviceKeyBytes() {
+      java.lang.Object ref = deviceKey_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        deviceKey_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1469,10 +1598,10 @@ public final class JobStatusBuff {
       if (!getJobIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, jobId_);
       }
-      if (retCode_ != sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.JobStatusEnum.UNSPECIFIED.getNumber()) {
+      if (retCode_ != sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.JobStatusEnum.UNJOBSTATUS.getNumber()) {
         output.writeEnum(3, retCode_);
       }
-      if (code_ != sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.JobStatusEnum.UNSPECIFIED.getNumber()) {
+      if (code_ != sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.JobStatusEnum.UNJOBSTATUS.getNumber()) {
         output.writeEnum(4, code_);
       }
       if (currentStep_ != 0) {
@@ -1490,6 +1619,9 @@ public final class JobStatusBuff {
       if (lastUpdated_ != null) {
         output.writeMessage(10, getLastUpdated());
       }
+      if (!getDeviceKeyBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 11, deviceKey_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1505,11 +1637,11 @@ public final class JobStatusBuff {
       if (!getJobIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, jobId_);
       }
-      if (retCode_ != sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.JobStatusEnum.UNSPECIFIED.getNumber()) {
+      if (retCode_ != sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.JobStatusEnum.UNJOBSTATUS.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(3, retCode_);
       }
-      if (code_ != sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.JobStatusEnum.UNSPECIFIED.getNumber()) {
+      if (code_ != sk.stuba.sdg.isbe.domain.model.protofiles.JobStatusBuff.JobStatusEnum.UNJOBSTATUS.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(4, code_);
       }
@@ -1532,6 +1664,9 @@ public final class JobStatusBuff {
       if (lastUpdated_ != null) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(10, getLastUpdated());
+      }
+      if (!getDeviceKeyBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, deviceKey_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1567,6 +1702,8 @@ public final class JobStatusBuff {
         if (!getLastUpdated()
             .equals(other.getLastUpdated())) return false;
       }
+      if (!getDeviceKey()
+          .equals(other.getDeviceKey())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1600,6 +1737,8 @@ public final class JobStatusBuff {
         hash = (37 * hash) + LASTUPDATED_FIELD_NUMBER;
         hash = (53 * hash) + getLastUpdated().hashCode();
       }
+      hash = (37 * hash) + DEVICEKEY_FIELD_NUMBER;
+      hash = (53 * hash) + getDeviceKey().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1764,6 +1903,8 @@ public final class JobStatusBuff {
           lastUpdated_ = null;
           lastUpdatedBuilder_ = null;
         }
+        deviceKey_ = "";
+
         return this;
       }
 
@@ -1812,6 +1953,7 @@ public final class JobStatusBuff {
         } else {
           result.lastUpdated_ = lastUpdatedBuilder_.build();
         }
+        result.deviceKey_ = deviceKey_;
         onBuilt();
         return result;
       }
@@ -1911,6 +2053,10 @@ public final class JobStatusBuff {
         }
         if (other.hasLastUpdated()) {
           mergeLastUpdated(other.getLastUpdated());
+        }
+        if (!other.getDeviceKey().isEmpty()) {
+          deviceKey_ = other.deviceKey_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2761,6 +2907,82 @@ public final class JobStatusBuff {
         }
         return lastUpdatedBuilder_;
       }
+
+      private java.lang.Object deviceKey_ = "";
+      /**
+       * <code>string deviceKey = 11;</code>
+       * @return The deviceKey.
+       */
+      public java.lang.String getDeviceKey() {
+        java.lang.Object ref = deviceKey_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          deviceKey_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string deviceKey = 11;</code>
+       * @return The bytes for deviceKey.
+       */
+      public com.google.protobuf.ByteString
+          getDeviceKeyBytes() {
+        java.lang.Object ref = deviceKey_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          deviceKey_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string deviceKey = 11;</code>
+       * @param value The deviceKey to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDeviceKey(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        deviceKey_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string deviceKey = 11;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDeviceKey() {
+        
+        deviceKey_ = getDefaultInstance().getDeviceKey();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string deviceKey = 11;</code>
+       * @param value The bytes for deviceKey to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDeviceKeyBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        deviceKey_ = value;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -2835,22 +3057,23 @@ public final class JobStatusBuff {
     java.lang.String[] descriptorData = {
       "\n\023JobStatusBuff.proto\022)sk.stuba.sdg.isbe" +
       ".domain.model.protofiles\032\037google/protobu" +
-      "f/timestamp.proto\"\'\n\tDataPoint\022\013\n\003tag\030\001 " +
-      "\001(\t\022\r\n\005value\030\002 \001(\001\"\356\002\n\tJobStatus\022\013\n\003uid\030" +
-      "\001 \001(\t\022\r\n\005jobId\030\002 \001(\t\022I\n\007retCode\030\003 \001(\01628." +
-      "sk.stuba.sdg.isbe.domain.model.protofile" +
-      "s.JobStatusEnum\022F\n\004code\030\004 \001(\01628.sk.stuba" +
-      ".sdg.isbe.domain.model.protofiles.JobSta" +
-      "tusEnum\022\023\n\013currentStep\030\005 \001(\005\022\022\n\ntotalSte" +
-      "ps\030\006 \001(\005\022\024\n\014currentCycle\030\007 \001(\005\022B\n\004data\030\010" +
-      " \003(\01324.sk.stuba.sdg.isbe.domain.model.pr" +
-      "otofiles.DataPoint\022/\n\013lastUpdated\030\n \001(\0132" +
-      "\032.google.protobuf.Timestamp*\262\001\n\rJobStatu" +
-      "sEnum\022\017\n\013UNSPECIFIED\020\000\022\014\n\010JOB_FREE\020\001\022\014\n\010" +
-      "JOB_IDLE\020\002\022\017\n\013JOB_PENDING\020\003\022\022\n\016JOB_PROCE" +
-      "SSING\020\004\022\014\n\010JOB_DONE\020\005\022\013\n\007JOB_ERR\020\006\022\016\n\nJO" +
-      "B_PAUSED\020\007\022\020\n\014JOB_CANCELED\020\010\022\022\n\016JOB_STAT" +
-      "US_MAX\020\tb\006proto3"
+      "f/timestamp.proto\":\n\tDataPoint\022\013\n\003tag\030\001 " +
+      "\001(\t\022\r\n\005value\030\002 \001(\001\022\021\n\tmeasureAt\030\003 \001(\001\"\201\003" +
+      "\n\tJobStatus\022\013\n\003uid\030\001 \001(\t\022\r\n\005jobId\030\002 \001(\t\022" +
+      "I\n\007retCode\030\003 \001(\01628.sk.stuba.sdg.isbe.dom" +
+      "ain.model.protofiles.JobStatusEnum\022F\n\004co" +
+      "de\030\004 \001(\01628.sk.stuba.sdg.isbe.domain.mode" +
+      "l.protofiles.JobStatusEnum\022\023\n\013currentSte" +
+      "p\030\005 \001(\005\022\022\n\ntotalSteps\030\006 \001(\005\022\024\n\014currentCy" +
+      "cle\030\007 \001(\005\022B\n\004data\030\010 \003(\01324.sk.stuba.sdg.i" +
+      "sbe.domain.model.protofiles.DataPoint\022/\n" +
+      "\013lastUpdated\030\n \001(\0132\032.google.protobuf.Tim" +
+      "estamp\022\021\n\tdeviceKey\030\013 \001(\t*\262\001\n\rJobStatusE" +
+      "num\022\017\n\013UNJOBSTATUS\020\000\022\014\n\010JOB_FREE\020\001\022\014\n\010JO" +
+      "B_IDLE\020\002\022\017\n\013JOB_PENDING\020\003\022\022\n\016JOB_PROCESS" +
+      "ING\020\004\022\014\n\010JOB_DONE\020\005\022\013\n\007JOB_ERR\020\006\022\016\n\nJOB_" +
+      "PAUSED\020\007\022\020\n\014JOB_CANCELED\020\010\022\022\n\016JOB_STATUS" +
+      "_MAX\020\tb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -2862,13 +3085,13 @@ public final class JobStatusBuff {
     internal_static_sk_stuba_sdg_isbe_domain_model_protofiles_DataPoint_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sk_stuba_sdg_isbe_domain_model_protofiles_DataPoint_descriptor,
-        new java.lang.String[] { "Tag", "Value", });
+        new java.lang.String[] { "Tag", "Value", "MeasureAt", });
     internal_static_sk_stuba_sdg_isbe_domain_model_protofiles_JobStatus_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_sk_stuba_sdg_isbe_domain_model_protofiles_JobStatus_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sk_stuba_sdg_isbe_domain_model_protofiles_JobStatus_descriptor,
-        new java.lang.String[] { "Uid", "JobId", "RetCode", "Code", "CurrentStep", "TotalSteps", "CurrentCycle", "Data", "LastUpdated", });
+        new java.lang.String[] { "Uid", "JobId", "RetCode", "Code", "CurrentStep", "TotalSteps", "CurrentCycle", "Data", "LastUpdated", "DeviceKey", });
     com.google.protobuf.TimestampProto.getDescriptor();
   }
 

@@ -30,8 +30,7 @@ public class Device {
     @DBRef
     private List<DataPointTag> dataPointTags = new ArrayList<>();
     private Long responseTime = 10L;
-    private LocalDateTime lastContact;
-    private JobStatusEnum lastJobStatus;
+    private Long lastResponse;
     private Long addTime;
     private Long initExpireTime;
     private String initApiKey;
@@ -133,6 +132,14 @@ public class Device {
         this.responseTime = responseTime;
     }
 
+    public Long getLastResponse() {
+        return lastResponse;
+    }
+
+    public void setLastResponse(Long lastResponse) {
+        this.lastResponse = lastResponse;
+    }
+
     public Long getAddTime() {
         return addTime;
     }
@@ -164,23 +171,6 @@ public class Device {
     public void setDeactivated(boolean deactivated) {
         this.deactivated = deactivated;
     }
-    
-    public LocalDateTime getLastContact() {
-        return lastContact;
-    }
-
-    public void setLastContact(LocalDateTime lastContact) {
-        this.lastContact = lastContact;
-    }
-
-    public JobStatusEnum getLastJobStatus() {
-        return lastJobStatus;
-    }
-
-    public void setLastJobStatus(JobStatusEnum lastJobStatus) {
-        this.lastJobStatus = lastJobStatus;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Device) {

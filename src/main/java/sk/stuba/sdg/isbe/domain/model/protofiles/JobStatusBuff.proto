@@ -22,6 +22,7 @@ enum JobStatusEnum {
 message DataPoint {
   string tag = 1;
   double value = 2; // Using double to represent floating-point numbers
+  double measureAt = 3;
 }
 
 // JobStatus structure
@@ -35,4 +36,5 @@ message JobStatus {
   int32 currentCycle = 7;
   repeated DataPoint data = 8; // Repeated field for list of DataPoint messages
   google.protobuf.Timestamp lastUpdated = 10; // Using Timestamp for lastUpdated field
+  string deviceKey = 11;
 }

@@ -12,7 +12,8 @@ public class StoredData {
     private String uid;
     private String dataPointTagId;
     private Double value;
-    private Long measureAdd;
+    private Long measureAt;
+    private Double measureAtDevice;
     private boolean deactivated;
     private String deviceId;
     private String tag;
@@ -41,12 +42,20 @@ public class StoredData {
         this.value = value;
     }
 
-    public Long getMeasureAdd() {
-        return measureAdd;
+    public Long getMeasureAt() {
+        return measureAt;
     }
 
-    public void setMeasureAdd(Long measureAdd) {
-        this.measureAdd = measureAdd;
+    public void setMeasureAt(Long measureAt) {
+        this.measureAt = measureAt;
+    }
+
+    public Double getMeasureAtDevice() {
+        return measureAtDevice;
+    }
+
+    public void setMeasureAtDevice(Double measureAtDevice) {
+        this.measureAtDevice = measureAtDevice;
     }
 
     public boolean isDeactivated() {
@@ -58,7 +67,7 @@ public class StoredData {
     }
 
     public boolean isValid() {
-        return getDataPointTagId() == null && getMeasureAdd() == null && getValue() == null;
+        return getDataPointTagId() == null && getMeasureAt() == null && getValue() == null;
     }
 
     public String getDeviceId() {

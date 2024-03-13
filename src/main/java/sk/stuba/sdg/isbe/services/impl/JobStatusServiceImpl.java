@@ -125,7 +125,8 @@ public class JobStatusServiceImpl implements JobStatusService {
                     storedData.setDataPointTagId(dataPointTag.getUid());
                     storedData.setTag(dataPointTag.getTag());
                     storedData.setValue(dataPoint.getValue());
-                    storedData.setMeasureAdd(Instant.now().toEpochMilli());
+                    storedData.setMeasureAt(Instant.now().toEpochMilli());
+                    storedData.setMeasureAtDevice(dataPoint.getMeasureAt());
                     storedData.setDeviceId(deviceId);
                     storedDataService.upsertStoredData(storedData);
                     dataPointTag.addStoredData(storedData);
@@ -141,8 +142,7 @@ public class JobStatusServiceImpl implements JobStatusService {
 
         Device device = deviceService.getDeviceById(deviceId);
         if (device != null) {
-            device.setLastContact(LocalDateTime.now(ZoneOffset.UTC));
-            device.setLastJobStatus(changeJobStatus.getCode());
+            device.setLastResponse(Instant.now().toEpochMilli());
             deviceRepository.save(device);
         }
 

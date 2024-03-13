@@ -3,13 +3,15 @@ package sk.stuba.sdg.isbe.domain.model;
 public class DataPoint {
     private String tag;
     private Double value;
+    private Double measureAt;
 
     public DataPoint() {
     }
 
-    public DataPoint(String tag, Double value) {
+    public DataPoint(String tag, Double value, Double measureAt) {
         this.tag = tag;
         this.value = value;
+        this.measureAt = measureAt;
     }
 
     public String getTag() {
@@ -26,5 +28,13 @@ public class DataPoint {
 
     public void setValue(Double value) {
         this.value = value;
+    }
+
+    public Double getMeasureAt() {
+        return measureAt;
+    }
+
+    public void setMeasureAt(Double measureAt) {
+        this.measureAt = measureAt;
     }
 }

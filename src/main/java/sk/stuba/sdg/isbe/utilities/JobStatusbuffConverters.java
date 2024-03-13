@@ -28,6 +28,10 @@ public class JobStatusbuffConverters {
             domainJobStatus.setJobId(protoJobStatus.getJobId());
         }
 
+        if(!protoJobStatus.getDeviceKey().isEmpty()) {
+            domainJobStatus.setDeviceKey(protoJobStatus.getDeviceKey());
+        }
+
         // Set RetCode and Code using enum mapping
         domainJobStatus.setRetCode(mapProtoEnumToDomain(protoJobStatus.getRetCode()));
         domainJobStatus.setCode(mapProtoEnumToDomain(protoJobStatus.getCode()));
@@ -44,7 +48,7 @@ public class JobStatusbuffConverters {
         // Convert and set DataPoints
         if (protoJobStatus.getDataCount() > 0) {
             domainJobStatus.setData(protoJobStatus.getDataList().stream()
-                    .map(dataPoint -> new DataPoint(dataPoint.getTag(), dataPoint.getValue()))
+                    .map(dataPoint -> new DataPoint(dataPoint.getTag(), dataPoint.getValue(),dataPoint.getMeasureAt()))
                     .collect(Collectors.toList()));
         }
 
