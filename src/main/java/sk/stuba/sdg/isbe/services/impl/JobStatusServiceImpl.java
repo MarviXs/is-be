@@ -142,7 +142,7 @@ public class JobStatusServiceImpl implements JobStatusService {
 
         Device device = deviceService.getDeviceById(deviceId);
         if (device != null) {
-            device.setLastContact(LocalDateTime.now(ZoneOffset.UTC));
+            device.setLastResponse(Instant.now().toEpochMilli());
             deviceRepository.save(device);
         }
 

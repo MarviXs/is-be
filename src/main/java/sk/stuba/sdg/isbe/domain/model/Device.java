@@ -171,15 +171,6 @@ public class Device {
     public void setDeactivated(boolean deactivated) {
         this.deactivated = deactivated;
     }
-    
-    public LocalDateTime getLastContact() {
-        return lastContact;
-    }
-
-    public void setLastContact(LocalDateTime lastContact) {
-        this.lastContact = lastContact;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Device) {
