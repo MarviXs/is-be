@@ -6,9 +6,11 @@ import sk.stuba.sdg.isbe.domain.model.DataPointTag;
 import sk.stuba.sdg.isbe.domain.model.StoredData;
 import sk.stuba.sdg.isbe.handlers.exceptions.InvalidEntityException;
 import sk.stuba.sdg.isbe.repositories.DataPointTagRepository;
+import sk.stuba.sdg.isbe.repositories.StoredDataRepository;
 import sk.stuba.sdg.isbe.services.DataPointTagService;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +18,9 @@ public class DataPointTagServiceImpl implements DataPointTagService {
 
     @Autowired
     private DataPointTagRepository dataPointTagRepository;
+
+    @Autowired
+    private StoredDataRepository storedDataRepository;
 
     @Override
     public DataPointTag createDataPointTag(DataPointTag dataPointTag){
@@ -48,6 +53,39 @@ public class DataPointTagServiceImpl implements DataPointTagService {
         }
 
         return getDataPointTagById(dataPointTagId).getStoredData();
+    }
+
+    @Override
+    public List<StoredData> getStoredDataByTime(String dataPointTagId, Long startTime, Long endTime,  Long cadence){
+        if (dataPointTagId == null || dataPointTagId.isEmpty()) {
+            throw new InvalidEntityException("Data Point Tag id is not set!");
+        }
+
+        if (endTime > startTime) {
+            throw new InvalidEntityException("Start is bigger then end!");
+        }
+
+        List<StoredData> storedData = storedDataRepository.findAllByMeasureAtBetween(startTime, endTime);
+
+        List<StoredData> aggregatedData = new ArrayList<>();
+        int totalItems = storedData.size();
+        Long itemsPerGroup = Math.max(1, totalItems / cadence);
+
+        for (int i = 0; i < totalItems; i += itemsPerGroup) {
+            Long end = Math.min(i + itemsPerGroup, totalItems);
+            double sum = 0;
+            for (int j = i; j < end; j++) {
+                sum += storedData.get(j).getValue();
+            }
+            double average = sum / (end - i);
+
+            StoredData averageData = new StoredData();
+            averageData.setValue(average);
+            aggregatedData.add(averageData);
+        }
+
+        return aggregatedData;
+
     }
 
     @Override
