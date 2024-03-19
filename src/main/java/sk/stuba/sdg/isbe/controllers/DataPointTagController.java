@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import sk.stuba.sdg.isbe.domain.model.DataPointTag;
 import sk.stuba.sdg.isbe.domain.model.StoredData;
 import sk.stuba.sdg.isbe.services.DataPointTagService;
+import sk.stuba.sdg.isbe.utilities.StoredDataMergeResponse;
 
 import java.util.List;
 
@@ -40,6 +41,11 @@ public class DataPointTagController {
     @GetMapping("/getStoredData/{dataPointTagId}")
     public List<StoredData> getStoredData(@PathVariable String dataPointTagId) {
         return dataPointTagService.getStoredData(dataPointTagId);
+    }
+
+    @GetMapping("/getStoredDataFromTags/{startTime}/{endTime}/{cadence}/{method}")
+    public List<StoredDataMergeResponse> getStoredDataFromTags(@RequestParam List<String> dataPointTagIds, @PathVariable Long startTime, @PathVariable Long endTime, @PathVariable Long cadence, @PathVariable int method) {
+        return dataPointTagService.getStoredDataForTags(dataPointTagIds, startTime, endTime, cadence, method);
     }
 
     @GetMapping("/downloadStoredDataAsCsv/{dataPointTagId}")

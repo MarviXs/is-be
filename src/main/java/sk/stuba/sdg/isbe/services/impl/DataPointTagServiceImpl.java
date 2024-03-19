@@ -8,12 +8,10 @@ import sk.stuba.sdg.isbe.handlers.exceptions.InvalidEntityException;
 import sk.stuba.sdg.isbe.repositories.DataPointTagRepository;
 import sk.stuba.sdg.isbe.repositories.StoredDataRepository;
 import sk.stuba.sdg.isbe.services.DataPointTagService;
+import sk.stuba.sdg.isbe.utilities.StoredDataMergeResponse;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -57,6 +55,34 @@ public class DataPointTagServiceImpl implements DataPointTagService {
         }
 
         return getDataPointTagById(dataPointTagId).getStoredData();
+    }
+
+    @Override
+    public List<StoredDataMergeResponse> getStoredDataForTags(List<String> dataPointTagIds, Long startTime, Long endTime,  Long cadence, int method) {
+        // This map will hold the intermediate results with measureAtDevice as key
+        Map<Double, Map<String, StoredData>> groupedData = new HashMap<>();
+
+        // Assuming getDataPointTagById(dataPointTagId) fetches a list of StoredData for a given ID
+        // You need to implement the actual fetching logic as per your application's structure
+        for(String dataPointTagId : dataPointTagIds) {
+            List<StoredData> storedDatas = getStoredDataByTime(dataPointTagId, startTime, endTime, cadence, method); // This method needs to be defined
+
+            for (StoredData storedData : storedDatas) {
+                groupedData.computeIfAbsent(storedData.getMeasureAtDevice(), k -> new HashMap<>())
+                        .put(storedData.getTag(), storedData);
+            }
+        }
+
+        // Transform the grouped data into a list of StoredDataMergeResponse
+        List<StoredDataMergeResponse> responses = new ArrayList<>();
+        for (Map.Entry<Double, Map<String, StoredData>> entry : groupedData.entrySet()) {
+            StoredDataMergeResponse response = new StoredDataMergeResponse();
+            response.setMeasureAtDevice(entry.getKey());
+            response.setTagValues(entry.getValue());
+            responses.add(response);
+        }
+
+        return responses;
     }
 
     @Override

@@ -114,6 +114,8 @@ public class JobStatusServiceImpl implements JobStatusService {
         if (changeJobStatus.getData() != null) {
             jobStatus.setData(changeJobStatus.getData());
 
+            long measureAtTime = Instant.now().toEpochMilli();
+
             if (deviceId != null && deviceService.getDeviceByIdAndKey(deviceId, deviceKey) != null) {
                 List<DataPointTag> dataPointTags = deviceService.getDeviceById(deviceId).getDataPointTags();
                 List<StoredData> listStoredData = new ArrayList<>();
@@ -125,7 +127,7 @@ public class JobStatusServiceImpl implements JobStatusService {
                     storedData.setDataPointTagId(dataPointTag.getUid());
                     storedData.setTag(dataPointTag.getTag());
                     storedData.setValue(dataPoint.getValue());
-                    storedData.setMeasureAt(Instant.now().toEpochMilli());
+                    storedData.setMeasureAt(measureAtTime);
                     storedData.setMeasureAtDevice(dataPoint.getMeasureAt());
                     storedData.setDeviceId(deviceId);
                     storedDataService.upsertStoredData(storedData);
