@@ -2,6 +2,7 @@ package sk.stuba.sdg.isbe.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import sk.stuba.sdg.isbe.domain.enums.JobStatusEnum;
@@ -21,6 +22,11 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
@@ -104,6 +110,11 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public List<Device> getDevicesByUser(User user) {
         return deviceRepository.getDevicesByUserDeactivatedWithoutDataPointTags(user.getUid(), false);
+    }
+
+    @Override
+    public Page<Device> getDevicesByUserPaging(User user, Pageable pageable) {
+        return deviceRepository.getDevicesByUserDeactivatedWithoutDataPointTagsPaging(user.getUid(), false, pageable);
     }
 
     @Override

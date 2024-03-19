@@ -1,5 +1,6 @@
 package sk.stuba.sdg.isbe.services;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import sk.stuba.sdg.isbe.domain.model.Device;
 import sk.stuba.sdg.isbe.domain.model.Job;
@@ -7,6 +8,11 @@ import sk.stuba.sdg.isbe.domain.model.User;
 
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
 
 public interface DeviceService {
     Device createDevice(Device device, User owner);
@@ -18,6 +24,8 @@ public interface DeviceService {
     List<Device> getDevices();
 
     List<Device> getDevicesByUser(User user);
+
+    Page<Device> getDevicesByUserPaging(User user, Pageable pageable);
 
     Device updateDevice(String deviceId, Device changeDevice);
 
@@ -46,4 +54,6 @@ public interface DeviceService {
     List<Device> getDevicesSharedWithUser(User user);
 
     String getDeviceStatus(String deviceId);
+
+
 }

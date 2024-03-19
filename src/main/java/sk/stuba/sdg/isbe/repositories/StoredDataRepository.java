@@ -12,4 +12,8 @@ public interface StoredDataRepository extends MongoRepository<StoredData, String
     StoredData findFirstStoredDataByDeviceIdAndTagOrderByMeasureAtDesc(String deviceId, String tag);
 
     List<StoredData> findAllByMeasureAtBetween(Long measureAt, Long measureAt2);
+
+    List<StoredData> findStoredDataByDataPointTagIdAndMeasureAtBetween(String DataPointTagId,Long measureAt, Long measureAt2);
+
+
 }

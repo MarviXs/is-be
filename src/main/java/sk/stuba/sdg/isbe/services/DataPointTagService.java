@@ -17,7 +17,7 @@ public interface DataPointTagService {
 
     List<StoredData> getStoredData(String dataPointTagId);
 
-    List<StoredData> getStoredDataByTime(String dataPointTagId, Long startTime, Long endTime,  Long cadence);
+    List<StoredData> getStoredDataByTime(String dataPointTagId, Long startTime, Long endTime,  Long cadence, int method);
 
     DataPointTag updateDataPointTag(String dataPointTagId, DataPointTag changeDataPointTag);
 

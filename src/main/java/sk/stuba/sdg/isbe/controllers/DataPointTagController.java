@@ -39,9 +39,9 @@ public class DataPointTagController {
     }
 
     @Operation(summary = "Get all stored data from data point in time range and cadence")
-    @GetMapping("/getStoredDataByTime/{dataPointTagId}/{startTime}/{endTime}/{cadence}")
-    public List<StoredData> getStoredDataByTime(@PathVariable String dataPointTagId,@PathVariable Long startTime, @PathVariable Long endTime, @PathVariable Long cadence) {
-        return dataPointTagService.getStoredDataByTime(dataPointTagId, startTime, endTime, cadence);
+    @GetMapping("/getStoredDataByTime/{dataPointTagId}/{startTime}/{endTime}/{cadence}/{method}")
+    public List<StoredData> getStoredDataByTime(@PathVariable String dataPointTagId,@PathVariable Long startTime, @PathVariable Long endTime, @PathVariable Long cadence, @PathVariable int method) {
+        return dataPointTagService.getStoredDataByTime(dataPointTagId, startTime, endTime, cadence, method);
     }
 
     @Operation(summary = "Update Data point tag")

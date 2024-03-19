@@ -11,7 +11,11 @@ import sk.stuba.sdg.isbe.services.DataPointTagService;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class DataPointTagServiceImpl implements DataPointTagService {
@@ -56,36 +60,88 @@ public class DataPointTagServiceImpl implements DataPointTagService {
     }
 
     @Override
-    public List<StoredData> getStoredDataByTime(String dataPointTagId, Long startTime, Long endTime,  Long cadence){
+    public List<StoredData> getStoredDataByTime(String dataPointTagId, Long startTime, Long endTime,  Long cadence, int method){
         if (dataPointTagId == null || dataPointTagId.isEmpty()) {
             throw new InvalidEntityException("Data Point Tag id is not set!");
         }
 
-        if (endTime > startTime) {
+        startTime -= 1;
+        endTime += 1;
+
+        if (endTime < startTime) {
             throw new InvalidEntityException("Start is bigger then end!");
         }
 
-        List<StoredData> storedData = storedDataRepository.findAllByMeasureAtBetween(startTime, endTime);
+        List<StoredData> storedData = storedDataRepository.findStoredDataByDataPointTagIdAndMeasureAtBetween(dataPointTagId,startTime, endTime);
 
         List<StoredData> aggregatedData = new ArrayList<>();
+
         int totalItems = storedData.size();
         Long itemsPerGroup = Math.max(1, totalItems / cadence);
 
         for (int i = 0; i < totalItems; i += itemsPerGroup) {
             Long end = Math.min(i + itemsPerGroup, totalItems);
-            double sum = 0;
-            for (int j = i; j < end; j++) {
-                sum += storedData.get(j).getValue();
-            }
-            double average = sum / (end - i);
+            List<Double> values = storedData.subList(i, Math.toIntExact(end)).stream().map(StoredData::getValue).collect(Collectors.toList());
 
-            StoredData averageData = new StoredData();
-            averageData.setValue(average);
+            // Calculate the statistic based on the selected method
+            double statisticValue = calculateStatistic(values, method);
+
+
+            StoredData averageData = storedData.get(i);
+            averageData.setValue(statisticValue);
             aggregatedData.add(averageData);
         }
 
         return aggregatedData;
 
+    }
+
+    private double calculateStatistic(List<Double> values, int method) {
+        switch (method) {
+            case 1: // AVERAGE Calculates the mean of the data points
+                return values.stream().mapToDouble(v -> v).average().orElse(0);
+            case 2: // MEDIAN Finds the middle value of the data points
+                Collections.sort(values);
+                int middle = values.size() / 2;
+                if (values.size() % 2 == 0) {
+                    return (values.get(middle - 1) + values.get(middle)) / 2.0;
+                } else {
+                    return values.get(middle);
+                }
+            case 3: // MODE Finds the most frequently occurring value
+                return values.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                        .entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse(0.0);
+            case 4: // MIN Finds the minimum value
+                return Collections.min(values);
+            case 5: // MAX Finds the maximum value
+                return Collections.max(values);
+            case 6: // STANDARD_DEVIATION Calculates the standard deviation of the data points
+                double mean = values.stream().mapToDouble(v -> v).average().orElse(0);
+                double temp = 0;
+                for (double a : values)
+                    temp += (mean - a) * (mean - a);
+                return Math.sqrt(temp / values.size());
+            case 7: // VARIANCE Calculates the variance of the data points
+                double meanVariance = values.stream().mapToDouble(v -> v).average().orElse(0);
+                double varianceTemp = 0;
+                for (double a : values)
+                    varianceTemp += (meanVariance - a) * (meanVariance - a);
+                return varianceTemp / values.size();
+            case 8: // RANGE Calculates the range (difference between max and min) of the data points
+                return Collections.max(values) - Collections.min(values);
+            case 9: // SUM Calculates the sum of all data points
+                return values.stream().mapToDouble(Double::doubleValue).sum();
+            case 10: // COUNT Counts the number of data points
+                return values.size();
+            case 11: // GEOMETRIC_MEAN Calculates the geometric mean of the data points
+                double product = values.stream().reduce(1.0, (a, b) -> a * b);
+                return Math.pow(product, 1.0 / values.size());
+            case 12: // HARMONIC_MEAN Calculates the harmonic mean of the data points
+                double sumInverse = values.stream().reduce(0.0, (a, b) -> a + 1.0 / b);
+                return values.size() / sumInverse;
+            default:
+                throw new IllegalArgumentException("Unknown statistical method");
+        }
     }
 
     @Override
