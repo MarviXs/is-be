@@ -73,8 +73,6 @@ public class DataPointTagController {
             csvBuilder.append(escapeCsvField(data.getDeviceId())).append(",");
             csvBuilder.append(escapeCsvField(data.getTag())).append("\n");
         }
-
-
         return csvBuilder.toString();
     }
 
