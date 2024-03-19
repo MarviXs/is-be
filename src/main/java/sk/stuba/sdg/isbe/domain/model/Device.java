@@ -4,7 +4,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import sk.stuba.sdg.isbe.domain.enums.DeviceTypeEnum;
+import sk.stuba.sdg.isbe.domain.enums.JobStatusEnum;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -167,7 +171,6 @@ public class Device {
     public void setDeactivated(boolean deactivated) {
         this.deactivated = deactivated;
     }
-
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Device) {

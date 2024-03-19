@@ -294,7 +294,6 @@ public class DeviceServiceImpl implements DeviceService {
                 sharedDevices.add(device);
             }
         }
-
         return sharedDevices;
     }
 
