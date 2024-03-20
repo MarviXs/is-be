@@ -3,6 +3,9 @@ package sk.stuba.sdg.isbe.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,11 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
 
 @RestController
 @RequestMapping("api/device")
@@ -40,6 +48,19 @@ public class DeviceController {
     @GetMapping
     public List<Device> getDevices(@AuthenticationPrincipal User user) {
         return this.deviceService.getDevicesByUser(user);
+    }
+
+    @GetMapping("/parsing")
+    public Page<Device> getDevicesPaging(@AuthenticationPrincipal User user,
+                                         @RequestParam(value = "sortBy", required = false, defaultValue = "addTime") String sortBy,
+                                         @RequestParam(value = "descending", defaultValue = "false") boolean descending,
+                                         @RequestParam(value = "page", defaultValue = "1") int page,
+                                         @RequestParam(value = "rowsPerPage", defaultValue = "10") int rowsPerPage) {
+
+        Sort sort = descending ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page - 1, rowsPerPage, sort);
+
+        return this.deviceService.getDevicesByUserPaging(user, pageable);
     }
 
     @Operation(summary = "Add new device into the system")
